@@ -96,10 +96,12 @@ class Student(models.Model):
     name = models.CharField(max_length=128)
     session = models.CharField(max_length=11)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
 
     gender = models.CharField(max_length=16, choices=GENDERS)
-    date_of_birth = models.DateField()
+    religion = models.CharField(max_length=16, choices=RELIGIONS)
+    dob = models.DateField()
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     address = models.TextField(max_length=256)
