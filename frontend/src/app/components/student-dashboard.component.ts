@@ -6,12 +6,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-student-dashboard',
   template: `
-    <!--    <ng-container *ngIf="loggedIn">
-          <router-outlet></router-outlet>
-        </ng-container>
-        <app-student-login *ngIf="!loggedIn"></app-student-login>-->
     <mat-toolbar color="primary">{{student.name}}</mat-toolbar>
-    <router-outlet></router-outlet>
   `,
   styles: []
 })
