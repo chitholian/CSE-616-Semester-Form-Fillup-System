@@ -88,8 +88,7 @@ import {DatePipe} from '@angular/common';
       </div>
     </form>
   `,
-  styles: [],
-  providers: [DatePipe]
+  styles: []
 })
 export class StudentRegComponent implements OnInit {
   form: FormGroup;

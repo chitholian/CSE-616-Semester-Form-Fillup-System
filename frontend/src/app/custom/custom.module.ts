@@ -19,7 +19,6 @@ import {
   MatFormFieldModule,
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [],

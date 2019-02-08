@@ -19,15 +19,16 @@ class HallSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'
-        # fields = ('code', 'title', 'credits')
+        # fields = '__all__'
+        fields = ('code', 'title', 'credits')
 
 
 class SemesterSerializer(serializers.ModelSerializer):
+    courses = CourseSerializer(many=True)
+
     class Meta:
         model = Semester
-        # fields = '__all__'
-        fields = ('id', 'number', 'year', 'department', 'active')
+        fields = ('id', 'number', 'year', 'department', 'active', 'courses')
 
 
 class DepartmentSerializer(serializers.ModelSerializer):

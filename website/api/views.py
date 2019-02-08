@@ -79,7 +79,12 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(methods=permissions.SAFE_METHODS, detail=True)
     def forms(self, request, pk=None):
         student = self.get_object()
-        return Response(ExamFormSerializer(ExamForm.objects.filter(student=student), many=True).data)
+        exam_id = request.GET.get('exam-id', None)
+        if exam_id is not None:
+            forms = ExamForm.objects.filter(student=student, exam__id=exam_id)
+        else:
+            forms = ExamForm.objects.filter(student=student)
+        return Response(ExamFormSerializer(forms, many=True).data)
 
 
 class ExamViewSet(viewsets.ModelViewSet):

@@ -24,16 +24,16 @@ RELIGIONS = (
 )
 
 EXAM_STATES = (
-    ('b', 'Pending for attendance entry'),
-    ('c', 'Pending for chairman approval'),
-    ('d', 'Pending for fees imposure'),
-    ('e', 'Pending for provost approval'),
-    ('f', 'Pending for payment'),
-    ('g', 'Payment completed'),
+    (1, 'Pending for attendance entry'),
+    (2, 'Pending for chairman approval'),
+    (3, 'Pending for provost approval'),
+    (4, 'Pending for fees imposure'),
+    (5, 'Pending for payment'),
+    (6, 'Payment completed'),
 )
 
 FORM_STATES = EXAM_STATES + (
-    ('a', 'Not applied yet'),
+    (0, 'Not applied yet'),
 )
 
 
@@ -120,8 +120,8 @@ class Exam(models.Model):
     fined_attendance = models.PositiveIntegerField(default=60)
     attendance_fine = models.PositiveIntegerField(default=600)
     ldo_form_fill_up = models.DateField()
-    ldo_payment = models.DateField()
-    status = models.CharField(max_length=1, choices=FORM_STATES)
+    ldo_payment = models.DateField(null=True, default=None)
+    status = models.PositiveSmallIntegerField(choices=EXAM_STATES, default=1)
 
     def __str__(self):
         return "{}".format(self.title)
@@ -131,7 +131,7 @@ class ExamForm(models.Model):
     id = models.AutoField(primary_key=True)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    status = models.CharField(max_length=1, choices=FORM_STATES)
+    status = models.PositiveSmallIntegerField(choices=FORM_STATES, default=1)
     attendance = models.PositiveIntegerField(default=0)
 
     def __str__(self):

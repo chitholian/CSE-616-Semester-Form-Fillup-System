@@ -3,6 +3,17 @@ white-bg = #f5f5f5
 mat-toolbar
   height 64px
 
+mat-drawer-container
+  height calc(100vh - 64px)
+  overflow hidden
+
+mat-drawer-content
+  padding 10px
+  background #fff
+
+table
+  width 100%
+
 .panel
   box-shadow 0 0 5px #aaa
   border-radius 5px
@@ -26,7 +37,6 @@ mat-form-field
 .float-left
   float: left
 
-
 .mid-center
   position absolute
   top 48%
@@ -39,3 +49,11 @@ mat-form-field
     float left
     width 50%
     box-sizing border-box
+
+
+.active
+  background white-bg
+
+
+.spacer
+  flex 1 1 0

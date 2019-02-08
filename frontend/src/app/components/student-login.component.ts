@@ -78,12 +78,16 @@ export class StudentLoginComponent implements OnInit {
     this.loading++;
     this.auth.loginStudent(this.form.value).subscribe(
       res => {
-        this.router.navigate(['/student']);
+        if (this.department.value === res.department && this.semester.value === res.semester) {
+          this.router.navigate(['/student']);
+        } else {
+          this.snackBar.open('Login failed.', 'OK');
+        }
         this.loading--;
       },
       error1 => {
         this.loading--;
-        this.snackBar.open('Login failed.');
+        this.snackBar.open('Login failed.', 'OK');
       }
     );
   }

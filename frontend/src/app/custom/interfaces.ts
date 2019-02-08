@@ -11,6 +11,7 @@ export interface Semester {
   number: number;
   year: number;
   department: number;
+  courses: Course[];
 }
 
 export interface Department {
@@ -40,6 +41,7 @@ export interface Student {
   phone: string;
   religion: string;
   address: string;
+  department: number;
 }
 
 export interface Hall {
@@ -47,4 +49,34 @@ export interface Hall {
   name: string;
   provost: number;
   gender: string;
+}
+
+export interface Exam {
+  id: number;
+  title: string;
+  semester: number;
+  active: boolean;
+  fees_per_credit: number;
+  allowed_attendance: number;
+  fined_attendance: number;
+  attendance_fine: number;
+  ldo_form_fill_up: string;
+  ldo_payment: string;
+  status: number;
+  courses: Course[];
+  applied: boolean;
+}
+
+export interface ExamForm {
+  id: number;
+  exam: number;
+  student: number;
+  status: number;
+  attendance: number;
+}
+
+export interface Course {
+  code: string;
+  title: string;
+  credits: number;
 }
