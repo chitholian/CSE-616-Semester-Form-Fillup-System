@@ -54,3 +54,19 @@ class ExamFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamForm
         fields = '__all__'
+
+
+class ExamFormForOfficeSerializer(serializers.ModelSerializer):
+    std_name = serializers.SerializerMethodField('student_name')
+    std_session = serializers.SerializerMethodField('student_session')
+
+    def student_name(self, obj):
+        return obj.student.name
+
+    def student_session(self, obj):
+        return obj.student.session
+
+    class Meta:
+        model = ExamForm
+        fields = '__all__'
+

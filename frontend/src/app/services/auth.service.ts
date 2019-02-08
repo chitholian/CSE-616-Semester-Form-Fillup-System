@@ -10,9 +10,9 @@ export class AuthService {
   examChanged = new Subject();
 
   user: AdminUser = {
-    name: 'CSE Chairman',
-    type: 'chairman',
-    user: 8,
+    name: 'CSE Office',
+    type: 'office',
+    user: 2,
     token: ''
   };
 
@@ -41,6 +41,10 @@ export class AuthService {
   post<T>(url, data): Observable<T> {
     const token = this.user == null ? '' : this.user.token;
     return this.http.post<T>(url, data, {headers: {Authorization: 'JWT ' + token}});
+  }
+
+  patch<T>(url, data): Observable<T> {
+    return this.http.patch<T>(url, data);
   }
 
   loginStudent(data: { id: number; department: number; semester: number; }) {

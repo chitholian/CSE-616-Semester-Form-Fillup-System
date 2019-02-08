@@ -73,6 +73,8 @@ export interface ExamForm {
   student: number;
   status: number;
   attendance: number;
+  std_name: string;
+  std_session: string;
 }
 
 export interface Course {

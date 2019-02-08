@@ -27,6 +27,7 @@ import {AdminService} from './services/admin.service';
 import {CreateExamComponent} from './components/create-exam.component';
 import {ConfirmAttendanceComponent} from './components/confirm-attendance.component';
 import {DatePipe} from '@angular/common';
+import { InputAttendanceComponent } from './components/input-attendance.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {DatePipe} from '@angular/common';
     OfficeComponent,
     AccountsComponent,
     CreateExamComponent,
-    ConfirmAttendanceComponent
+    ConfirmAttendanceComponent,
+    InputAttendanceComponent
   ],
   imports: [
     CustomModule,

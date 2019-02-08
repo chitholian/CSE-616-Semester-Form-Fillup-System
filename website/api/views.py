@@ -1,6 +1,8 @@
-from rest_framework import viewsets, permissions, status
+from django.http import QueryDict
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.utils import json
 
 from .serializers import *
 
@@ -92,11 +94,26 @@ class ExamViewSet(viewsets.ModelViewSet):
     serializer_class = ExamSerializer
 
     @action(methods=permissions.SAFE_METHODS, detail=True)
-    def students(self, request, pk=None):
+    def forms(self, request, pk=None):
         exam = self.get_object()
-        return Response(StudentSerializer(Student.objects.filter(examform__exam=exam), many=True).data)
+        forms = ExamForm.objects.filter(exam=exam)
+        return Response(ExamFormForOfficeSerializer(forms, many=True).data)
 
 
 class ExamFormViewSet(viewsets.ModelViewSet):
     queryset = ExamForm.objects.all()
     serializer_class = ExamFormSerializer
+
+
+class InputAttendanceView(generics.UpdateAPIView):
+    serializer_class = ExamFormForOfficeSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        exam_id = request.data[0]['exam']
+        for data in request.data:
+            form = ExamForm.objects.get(id=data['id'])
+            form.status = 2
+            form.attendance = data['attendance']
+            form.save()
+        Exam.objects.update(id=exam_id, status=2)
+        return Response(status=status.HTTP_202_ACCEPTED)

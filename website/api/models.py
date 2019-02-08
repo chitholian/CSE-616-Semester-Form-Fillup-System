@@ -132,7 +132,7 @@ class ExamForm(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     status = models.PositiveSmallIntegerField(choices=FORM_STATES, default=1)
-    attendance = models.PositiveIntegerField(default=0)
+    attendance = models.SmallIntegerField(default=-1)
 
     def __str__(self):
         return "{} @ {}".format(self.student.id, self.exam.title)

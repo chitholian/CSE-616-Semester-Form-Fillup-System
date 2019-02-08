@@ -26,8 +26,4 @@ export class DepartmentService {
   getExams(deptId) {
     return this.auth.get<Exam[]>('http://127.0.0.1:8000/api/departments/' + deptId + '/exams/');
   }
-
-  getInfo(deptId) {
-    return this.auth.get<Department[]>('http://127.0.0.1:8000/api/departments/' + deptId + '/');
-  }
 }

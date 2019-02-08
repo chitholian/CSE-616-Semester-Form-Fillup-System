@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ExamService} from '../services/exam.service';
 import {AuthService} from '../services/auth.service';
 import {DatePipe} from '@angular/common';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-create-exam',
@@ -56,7 +57,7 @@ export class CreateExamComponent implements OnInit {
     return this.form.get('ldo_form_fill_up');
   }
 
-  constructor(private dp: DatePipe, private auth: AuthService, private es: ExamService, private fb: FormBuilder, private ds: DepartmentService, private route: ActivatedRoute) {
+  constructor(private sb: MatSnackBar, private dp: DatePipe, private auth: AuthService, private es: ExamService, private fb: FormBuilder, private ds: DepartmentService, private route: ActivatedRoute) {
     this.form = fb.group({
       title: fb.control('', Validators.required),
       semester: fb.control('', Validators.required),
@@ -91,6 +92,7 @@ export class CreateExamComponent implements OnInit {
       }, error1 => {
         console.log(error1);
         this.loading--;
+        this.sb.open('Error loading semesters.', 'OK');
       });
     });
   }

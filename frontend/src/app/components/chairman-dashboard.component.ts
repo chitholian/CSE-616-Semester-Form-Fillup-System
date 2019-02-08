@@ -24,11 +24,14 @@ import {Router} from '@angular/router';
     <mat-drawer-container>
 
       <mat-drawer #drawer mode="side">
+        <h3 class="mat-title">Active Exams</h3>
         <mat-nav-list>
-          <mat-list-item *ngFor="let e of exams" routerLinkActive="active"
-                         [routerLink]="'../dept-chairman/exams/'+e.id">
-            {{e.title}}
-          </mat-list-item>
+          <ng-container *ngFor="let e of exams">
+            <mat-list-item *ngIf="e.active && (e.status == 2 || e.status == 6)" routerLinkActive="active"
+                           [routerLink]="'../dept-chairman/exams/'+e.id">
+              {{e.title}}
+            </mat-list-item>
+          </ng-container>
         </mat-nav-list>
       </mat-drawer>
 
@@ -64,7 +67,7 @@ export class ChairmanDashboardComponent implements OnInit {
     }, error1 => {
       console.log(error1);
       this.loading--;
-      this.sb.open('Error loading semesters', 'OK');
+      this.sb.open('Error loading exams', 'OK');
     });
   }
 
@@ -85,6 +88,8 @@ export class ChairmanDashboardComponent implements OnInit {
   }
 
   logout() {
+    this.auth.logoutAdmin();
+    this.router.navigate(['/login/admin']);
   }
 
   gotoCreateExam() {
