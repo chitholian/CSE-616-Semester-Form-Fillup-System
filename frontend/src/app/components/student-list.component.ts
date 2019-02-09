@@ -16,17 +16,9 @@ import {MatSnackBar} from '@angular/material';
         <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
         <mat-cell *matCellDef="let s">{{s.name}}</mat-cell>
       </ng-container>
-      <ng-container matColumnDef="session">
-        <mat-header-cell *matHeaderCellDef>Session</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{s.session}}</mat-cell>
-      </ng-container>
       <ng-container matColumnDef="gender">
         <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
         <mat-cell *matCellDef="let s">{{s.gender|titlecase}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="religion">
-        <mat-header-cell *matHeaderCellDef>Religion</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{s.religion|titlecase}}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="phone">
         <mat-header-cell *matHeaderCellDef>Phone</mat-header-cell>
@@ -52,7 +44,7 @@ export class StudentListComponent implements OnInit {
   loading = 0;
   students: Student[] = [];
 
-  displayedColumns = ['id', 'name', 'session', 'gender', 'religion', 'phone', 'email', 'address'];
+  displayedColumns = ['id', 'name', 'gender', 'phone', 'email', 'address'];
 
   constructor(private sb: MatSnackBar, private ds: DepartmentService, private route: ActivatedRoute) {
   }

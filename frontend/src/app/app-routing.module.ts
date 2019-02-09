@@ -18,19 +18,21 @@ import {InputAttendanceComponent} from './components/input-attendance.component'
 import {ConfirmPaymentComponent} from './components/confirm-payment.component';
 import {ExamFormDetailsComponent} from './components/exam-form-details.component';
 import {StudentListComponent} from './components/student-list.component';
+import {HomePageComponent} from './components/home-page.component';
+import {UserDashBoardComponent} from './components/user-dash-board.component';
 
 const routes: Routes = [
   {
     path: '', component: AppComponent, children: [
+      {path: '', component: HomePageComponent},
       {path: 'login/admin', component: LoginComponent},
       {path: 'login/student', component: StudentLoginComponent},
-      {
-        path: 'student', component: StudentDashboardComponent, canActivate: [StudentGuard], children: []
-      }
+      {path: 'student', component: StudentDashboardComponent, canActivate: [StudentGuard]}
     ]
   },
   {
     path: 'dept-chairman', component: ChairmanDashboardComponent, canActivate: [AdminUserGuard], children: [
+      {path: '', component: UserDashBoardComponent},
       {path: 'create-exam', component: CreateExamComponent},
       {path: 'exams/:id', component: ExamFormDetailsComponent},
       {path: 'all-students', component: StudentListComponent},
@@ -38,6 +40,7 @@ const routes: Routes = [
   },
   {
     path: 'dept-office', component: OfficeComponent, canActivate: [AdminUserGuard], children: [
+      {path: '', component: UserDashBoardComponent},
       {path: 'exams/:id', component: InputAttendanceComponent},
       {path: 'register-student', component: StudentRegComponent},
       {path: 'all-students', component: StudentListComponent},
@@ -45,6 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'bank', component: BankComponent, canActivate: [AdminUserGuard], children: [
+      {path: '', component: UserDashBoardComponent},
       {path: 'exams/:id', component: ConfirmPaymentComponent},
     ]
   },

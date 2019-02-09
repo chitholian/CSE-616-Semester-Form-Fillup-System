@@ -30,6 +30,8 @@ import {InputAttendanceComponent} from './components/input-attendance.component'
 import {ConfirmPaymentComponent} from './components/confirm-payment.component';
 import {ExamFormDetailsComponent} from './components/exam-form-details.component';
 import { StudentListComponent } from './components/student-list.component';
+import { HomePageComponent } from './components/home-page.component';
+import { UserDashBoardComponent } from './components/user-dash-board.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { StudentListComponent } from './components/student-list.component';
     ExamFormDetailsComponent,
     InputAttendanceComponent,
     ConfirmPaymentComponent,
-    StudentListComponent
+    StudentListComponent,
+    HomePageComponent,
+    UserDashBoardComponent
   ],
   imports: [
     CustomModule,

@@ -11,7 +11,7 @@ import {AuthService} from '../services/auth.service';
   template: `
     <div class="panel" *ngIf="exam != null">
       <mat-toolbar>{{exam.title}}<span class="spacer"></span>
-        Total Paid: {{totalPaidNumber}} student(s) <span
+        Total Paid: {{totalPaidNumber}} {{(totalPaidNumber > 1 ? 'Students': 'Student')}} <span
           *ngIf="exam.status < 6 && !expired(exam)">, Payable Until: <strong>{{exam.ldo_payment|date:'MMMM dd, yyy'}}</strong></span>
       </mat-toolbar>
       <table mat-table [dataSource]="forms" class="panel-content">
@@ -68,7 +68,7 @@ export class ExamFormDetailsComponent implements OnInit {
 
   displayedColumns = ['id', 'name', 'session', 'attendance', 'status'];
 
-  get totalPaidNumber() {
+  get totalPaidNumber(): any {
     if (this.forms === undefined) {
       return 'N/A';
     }

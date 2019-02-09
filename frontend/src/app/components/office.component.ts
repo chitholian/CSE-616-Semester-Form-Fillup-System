@@ -14,11 +14,11 @@ import {AdminService} from '../services/admin.service';
         <mat-icon>menu</mat-icon>
       </button>
       {{auth.user.name}}<span class="spacer"></span>
-      <button (click)="gotoStudentList()" mat-icon-button type="button" title="View All Students">
-        <mat-icon>view_list</mat-icon>
-      </button>
       <button (click)="gotoAddStudent()" mat-icon-button type="button" title="Add new student.">
-        <mat-icon>add</mat-icon>
+        <mat-icon>person_add</mat-icon>
+      </button>
+      <button (click)="gotoStudentList()" mat-icon-button type="button" title="View All Students">
+        <mat-icon>people</mat-icon>
       </button>
       <button (click)="logout()" mat-icon-button type="button" title="Logout">
         <mat-icon>logout</mat-icon>
