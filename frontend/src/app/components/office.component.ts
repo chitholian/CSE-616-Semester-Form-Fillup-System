@@ -24,7 +24,7 @@ import {AdminService} from '../services/admin.service';
         <h3 class="mat-title">Active Exams</h3>
         <mat-nav-list>
           <ng-container *ngFor="let e of exams">
-            <mat-list-item *ngIf="e.active && e.status == 1" routerLinkActive="active"
+            <mat-list-item *ngIf="e.active && e.status == 1 && shouldInput(e)" routerLinkActive="active"
                            [routerLink]="'../dept-office/exams/'+e.id">
               {{e.title}}
             </mat-list-item>
@@ -65,7 +65,7 @@ export class OfficeComponent implements OnInit {
     }, error1 => {
       console.log(error1);
       this.loading--;
-      this.sb.open('Error loading semesters', 'OK');
+      this.sb.open('Error loading exams', 'OK');
     });
   }
 
@@ -88,5 +88,9 @@ export class OfficeComponent implements OnInit {
   logout() {
     this.auth.logoutAdmin();
     this.router.navigate(['/login/admin']);
+  }
+
+  shouldInput(exam) {
+    return (new Date(exam.ldo_form_fill_up)) < (new Date());
   }
 }

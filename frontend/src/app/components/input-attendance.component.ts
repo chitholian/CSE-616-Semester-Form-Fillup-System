@@ -102,7 +102,7 @@ export class InputAttendanceComponent implements OnInit {
     this.loading++;
     this.es.getInfo(examId).subscribe(res => {
       this.exam = res;
-      if (res.status !== 1) {
+      if (res.status !== 1 || this.shouldNotInput(res)) {
         this.loading--;
         this.router.navigate(['/dept-office']);
       }
@@ -118,5 +118,9 @@ export class InputAttendanceComponent implements OnInit {
     this.es.getForms(examId).subscribe(res => {
       this.forms = res;
     });
+  }
+
+  shouldNotInput(exam) {
+    return (new Date(exam.ldo_form_fill_up)) >= (new Date());
   }
 }

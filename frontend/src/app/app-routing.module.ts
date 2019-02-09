@@ -16,6 +16,7 @@ import {ProvostComponent} from './components/provost.component';
 import {CreateExamComponent} from './components/create-exam.component';
 import {ConfirmAttendanceComponent} from './components/confirm-attendance.component';
 import {InputAttendanceComponent} from './components/input-attendance.component';
+import {ConfirmPaymentComponent} from './components/confirm-payment.component';
 
 const routes: Routes = [
   {
@@ -39,7 +40,11 @@ const routes: Routes = [
       {path: 'exams/:id', component: InputAttendanceComponent},
     ]
   },
-  {path: 'bank', component: BankComponent, canActivate: [AdminUserGuard]},
+  {
+    path: 'bank', component: BankComponent, canActivate: [AdminUserGuard], children: [
+      {path: 'exams/:id', component: ConfirmPaymentComponent},
+    ]
+  },
   {path: 'accounts', component: AccountsComponent, canActivate: [AdminUserGuard]},
   {path: 'hall-provost', component: ProvostComponent, canActivate: [AdminUserGuard]},
 

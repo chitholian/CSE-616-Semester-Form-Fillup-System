@@ -10,9 +10,9 @@ export class AuthService {
   examChanged = new Subject();
 
   user: AdminUser = {
-    name: 'CSE Office',
-    type: 'office',
-    user: 2,
+    name: 'Agrani Bank',
+    type: 'bank',
+    user: 4,
     token: ''
   };
 

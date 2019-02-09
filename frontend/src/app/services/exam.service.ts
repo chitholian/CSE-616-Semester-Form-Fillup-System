@@ -12,6 +12,10 @@ export class ExamService {
   constructor(private auth: AuthService) {
   }
 
+  getAllExams(): Observable<Exam[]> {
+    return this.auth.get<Exam[]>('/api/exams/');
+  }
+
   createExam(data: {}) {
     return this.auth.post('/api/exams/', data);
   }

@@ -28,6 +28,7 @@ import {CreateExamComponent} from './components/create-exam.component';
 import {ConfirmAttendanceComponent} from './components/confirm-attendance.component';
 import {DatePipe} from '@angular/common';
 import { InputAttendanceComponent } from './components/input-attendance.component';
+import { ConfirmPaymentComponent } from './components/confirm-payment.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { InputAttendanceComponent } from './components/input-attendance.componen
     AccountsComponent,
     CreateExamComponent,
     ConfirmAttendanceComponent,
-    InputAttendanceComponent
+    InputAttendanceComponent,
+    ConfirmPaymentComponent
   ],
   imports: [
     CustomModule,

@@ -27,7 +27,7 @@ import {Router} from '@angular/router';
         <h3 class="mat-title">Active Exams</h3>
         <mat-nav-list>
           <ng-container *ngFor="let e of exams">
-            <mat-list-item *ngIf="e.active && (e.status == 2 || e.status == 6)" routerLinkActive="active"
+            <mat-list-item *ngIf="e.active && (e.status == 2 || e.status == 6 || expired(e))" routerLinkActive="active"
                            [routerLink]="'../dept-chairman/exams/'+e.id">
               {{e.title}}
             </mat-list-item>
@@ -94,5 +94,9 @@ export class ChairmanDashboardComponent implements OnInit {
 
   gotoCreateExam() {
     this.router.navigate(['../dept-chairman/create-exam', {deptId: this.department.id}]);
+  }
+
+  expired(exam) {
+    return (new Date(exam.ldo_payment)) < (new Date());
   }
 }
