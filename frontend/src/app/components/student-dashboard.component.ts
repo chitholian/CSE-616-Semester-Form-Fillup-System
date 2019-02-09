@@ -16,7 +16,11 @@ import {ExamService} from '../services/exam.service';
     </mat-toolbar>
     <div class="panel" *ngFor="let e of exams">
       <mat-toolbar>{{e.title}}<span class="spacer"></span>
-        <button mat-button *ngIf="examForm.status == 0" (click)="applyNow(e)" [disabled]="loading > 0">APPLY NOW</button>
+        <button mat-button *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)" (click)="applyNow(e)" [disabled]="loading > 0">APPLY
+          NOW
+        </button>
+        <mat-error *ngIf="examForm.status == 0 && expired(e.ldo_form_fill_up)">Application Deadline Expired</mat-error>
+        <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Payment Deadline Expired</mat-error>
       </mat-toolbar>
       <table mat-table [dataSource]="courses" class="panel-content">
         <ng-container matColumnDef="code">
@@ -39,13 +43,17 @@ import {ExamService} from '../services/exam.service';
       </table>
       <div class="panel-footer of-hidden">
         <span class="float-right" *ngIf="examForm.status > 1">Attendance: {{examForm.attendance}}%</span>
-        <strong>Status: </strong> <mat-error
-        *ngIf="examForm.status > 1 && examForm.attendance < 60">Form rejected due to low attendance</mat-error>
-        <span
-          *ngIf="examForm.status <= 1 || examForm.attendance >= 60">{{statusMessages[examForm.status]}}</span>
-        <p *ngIf="examForm.status == 0">Last Date of Application: <strong>{{e.ldo_form_fill_up|date:'MMMM dd, yyyy'}}</strong></p>
-        <p *ngIf="examForm.status == 5">Total Fees: <strong>{{calculateFees(e) | number :'1.2-2'}} BDT</strong>, Last Date of Payment:
-          <strong>{{e.ldo_payment|date:'MMMM dd, yyyy'}}</strong></p>
+        <strong>Status: </strong>
+        <mat-error *ngIf="examForm.status > 1 && examForm.attendance < 60">Form rejected due to low attendance
+        </mat-error>
+        <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Form rejected due to no payment
+        </mat-error>
+        <span *ngIf="!(e.status > 1 && examForm.attendance < 60) && !(expired(e.ldo_payment) && examForm.status < 6)">
+          {{statusMessages[examForm.status]}}</span>
+        <p *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)">Last Date of Application:
+          <strong>{{e.ldo_form_fill_up|date:'MMMM dd, yyyy'}}</strong></p>
+        <p *ngIf="examForm.status == 5 && !expired(e.ldo_payment)">Total Fees: <strong>{{calculateFees(e) | number :'1.2-2'}} BDT</strong>,
+          Last Date of Payment: <strong>{{e.ldo_payment|date:'MMMM dd, yyyy'}}</strong></p>
       </div>
     </div>
   `,
@@ -148,5 +156,9 @@ export class StudentDashboardComponent implements OnInit {
       this.loading--;
       console.log(error1);
     });
+  }
+
+  expired(date) {
+    return (new Date(date)) < (new Date());
   }
 }

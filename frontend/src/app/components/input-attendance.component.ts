@@ -39,7 +39,7 @@ import {AuthService} from '../services/auth.service';
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </table>
       <div class="panel-footer of-hidden">
-        <button class="float-right" mat-raised-button color="primary" (click)="apply()" [disabled]="loading > 0">CHECK AND SUBMIT</button>
+        <button class="float-right" mat-raised-button color="warn" (click)="apply()" [disabled]="loading > 0">CHECK AND SUBMIT</button>
       </div>
     </div>
   `,

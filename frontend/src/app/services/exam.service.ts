@@ -35,4 +35,12 @@ export class ExamService {
   inputAttendances(forms) {
     return this.auth.patch('/api/input-attendances/', forms);
   }
+
+  deleteExam(examId) {
+    return this.auth.delete('/api/exams/' + examId + '/');
+  }
+
+  finishExam(examId) {
+    return this.auth.patch('/api/exams/' + examId + '/', {id: examId, active: false});
+  }
 }

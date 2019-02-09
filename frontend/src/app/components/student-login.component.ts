@@ -28,7 +28,6 @@ import {Router} from '@angular/router';
           </mat-select>
           <mat-error *ngIf="semester.invalid">A semester is required</mat-error>
         </mat-form-field>
-        <button mat-flat-button type="button" routerLink="/registration">I am a new student</button>
         <button mat-raised-button type="submit" color="primary" class="float-right">LOGIN</button>
       </div>
     </form>

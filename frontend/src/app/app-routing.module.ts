@@ -14,16 +14,16 @@ import {BankComponent} from './components/bank.component';
 import {AccountsComponent} from './components/accounts.component';
 import {ProvostComponent} from './components/provost.component';
 import {CreateExamComponent} from './components/create-exam.component';
-import {ConfirmAttendanceComponent} from './components/confirm-attendance.component';
 import {InputAttendanceComponent} from './components/input-attendance.component';
 import {ConfirmPaymentComponent} from './components/confirm-payment.component';
+import {ExamFormDetailsComponent} from './components/exam-form-details.component';
+import {StudentListComponent} from './components/student-list.component';
 
 const routes: Routes = [
   {
     path: '', component: AppComponent, children: [
       {path: 'login/admin', component: LoginComponent},
       {path: 'login/student', component: StudentLoginComponent},
-      {path: 'registration', component: StudentRegComponent},
       {
         path: 'student', component: StudentDashboardComponent, canActivate: [StudentGuard], children: []
       }
@@ -32,12 +32,15 @@ const routes: Routes = [
   {
     path: 'dept-chairman', component: ChairmanDashboardComponent, canActivate: [AdminUserGuard], children: [
       {path: 'create-exam', component: CreateExamComponent},
-      {path: 'exams/:id', component: ConfirmAttendanceComponent},
+      {path: 'exams/:id', component: ExamFormDetailsComponent},
+      {path: 'all-students', component: StudentListComponent},
     ]
   },
   {
     path: 'dept-office', component: OfficeComponent, canActivate: [AdminUserGuard], children: [
       {path: 'exams/:id', component: InputAttendanceComponent},
+      {path: 'register-student', component: StudentRegComponent},
+      {path: 'all-students', component: StudentListComponent},
     ]
   },
   {

@@ -1,18 +1,23 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth.service';
-import {Observable} from 'rxjs';
-import {Department, Exam, Hall, Semester} from '../custom/interfaces';
+import {Observable, Subject} from 'rxjs';
+import {Department, Exam, Hall, Semester, Student} from '../custom/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentService {
+  studentAdded = new Subject();
 
   constructor(private auth: AuthService) {
   }
 
   getAllDepartments(): Observable<Department[]> {
     return this.auth.get<Department[]>('http://127.0.0.1:8000/api/departments/');
+  }
+
+  getAllStudents(deptId): Observable<Student[]> {
+    return this.auth.get<Student[]>('http://127.0.0.1:8000/api/departments/' + deptId + '/students/');
   }
 
   getSemesters(departmentId): Observable<Semester[]> {

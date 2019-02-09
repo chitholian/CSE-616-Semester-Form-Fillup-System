@@ -1,8 +1,6 @@
-from django.http import QueryDict
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.utils import json
 
 from .serializers import *
 
@@ -40,7 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class SemesterViewSet(viewsets.ModelViewSet):
-    queryset = Semester.objects.all()
+    queryset = Semester.objects.filter(active=True)
     serializer_class = SemesterSerializer
 
     @action(methods=permissions.SAFE_METHODS, detail=True)
@@ -62,6 +60,12 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     def semesters(self, request, pk=None):
         department = self.get_object()
         return Response(SemesterSerializer(Semester.objects.filter(department=department), many=True).data)
+
+    @action(methods=permissions.SAFE_METHODS, detail=True)
+    def students(self, request, pk=None):
+        department = self.get_object()
+        return Response(
+            StudentSerializer(Student.objects.filter(department=department, semester__active=True), many=True).data)
 
     @action(methods=permissions.SAFE_METHODS, detail=True)
     def halls(self, request, pk=None):
@@ -90,7 +94,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 
 class ExamViewSet(viewsets.ModelViewSet):
-    queryset = Exam.objects.all()
+    queryset = Exam.objects.filter(active=True)
     serializer_class = ExamSerializer
 
     @action(methods=permissions.SAFE_METHODS, detail=True)
@@ -112,8 +116,8 @@ class InputAttendanceView(generics.UpdateAPIView):
         exam_id = request.data[0]['exam']
         for data in request.data:
             form = ExamForm.objects.get(id=data['id'])
-            form.status = 2
+            form.status = 5
             form.attendance = data['attendance']
             form.save()
-        Exam.objects.update(id=exam_id, status=2)
+        Exam.objects.update(id=exam_id, status=5)
         return Response(status=status.HTTP_202_ACCEPTED)

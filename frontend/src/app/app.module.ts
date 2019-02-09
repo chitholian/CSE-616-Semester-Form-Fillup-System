@@ -25,10 +25,11 @@ import {ExamService} from './services/exam.service';
 import {ExamFormService} from './services/exam-form.service';
 import {AdminService} from './services/admin.service';
 import {CreateExamComponent} from './components/create-exam.component';
-import {ConfirmAttendanceComponent} from './components/confirm-attendance.component';
 import {DatePipe} from '@angular/common';
-import { InputAttendanceComponent } from './components/input-attendance.component';
-import { ConfirmPaymentComponent } from './components/confirm-payment.component';
+import {InputAttendanceComponent} from './components/input-attendance.component';
+import {ConfirmPaymentComponent} from './components/confirm-payment.component';
+import {ExamFormDetailsComponent} from './components/exam-form-details.component';
+import { StudentListComponent } from './components/student-list.component';
 
 @NgModule({
   declarations: [
@@ -45,9 +46,10 @@ import { ConfirmPaymentComponent } from './components/confirm-payment.component'
     OfficeComponent,
     AccountsComponent,
     CreateExamComponent,
-    ConfirmAttendanceComponent,
+    ExamFormDetailsComponent,
     InputAttendanceComponent,
-    ConfirmPaymentComponent
+    ConfirmPaymentComponent,
+    StudentListComponent
   ],
   imports: [
     CustomModule,

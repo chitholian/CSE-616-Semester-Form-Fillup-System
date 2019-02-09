@@ -2,16 +2,17 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Department, Hall, Semester, Student} from '../custom/interfaces';
 import {DepartmentService} from '../services/department.service';
-import {MatSnackBar} from '@angular/material';
 import {StudentService} from '../services/student.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
+import {AdminService} from '../services/admin.service';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-student-reg',
   template: `
     <form class="panel" [formGroup]="form" (ngSubmit)="submit()">
-      <mat-toolbar color="primary">Student Registration</mat-toolbar>
+      <mat-toolbar>Student Registration</mat-toolbar>
       <div class="panel-content of-hidden">
         <div class="col-1-2">
           <mat-form-field>
@@ -29,19 +30,13 @@ import {DatePipe} from '@angular/common';
             <mat-error *ngIf="gender.invalid">Gender is required</mat-error>
           </mat-form-field>
           <mat-form-field>
-            <mat-select [formControl]="department" required placeholder="Department" (selectionChange)="onDeptChange()">
-              <mat-option *ngFor="let d of departments" [value]="d.id">{{d.name}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="department.invalid">A department is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select [disabled]="loading > 0 || department.invalid" [formControl]="semester" required placeholder="Semester">
+            <mat-select [disabled]="loading > 0" [formControl]="semester" required placeholder="Semester">
               <mat-option *ngFor="let s of semesters" [value]="s.id">Semester {{s.number}}, Year {{s.year}}</mat-option>
             </mat-select>
             <mat-error *ngIf="semester.invalid">A semester is required</mat-error>
           </mat-form-field>
           <mat-form-field>
-            <mat-select [disabled]="loading > 0 || department.invalid || gender.invalid" [formControl]="hall" required placeholder="Hall">
+            <mat-select [disabled]="loading > 0 || gender.invalid" [formControl]="hall" required placeholder="Hall">
               <ng-container *ngFor="let s of halls">
                 <mat-option *ngIf="s.gender == gender.value" [value]="s.id">{{s.name}}</mat-option>
               </ng-container>
@@ -77,12 +72,11 @@ import {DatePipe} from '@angular/common';
             <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="dob.invalid">A valid date of birth is required</mat-error>
           </mat-form-field>
-          <mat-form-field>
-            <textarea matInput required cols="2" placeholder="Address" name="address" [formControl]="address"></textarea>
-            <mat-error *ngIf="address.invalid">Address is required</mat-error>
-          </mat-form-field>
         </div>
-        <button mat-flat-button type="button" routerLink="/login/student">I have already registered</button>
+        <mat-form-field>
+          <textarea matInput required cols="2" placeholder="Address" name="address" [formControl]="address"></textarea>
+          <mat-error *ngIf="address.invalid">Address is required</mat-error>
+        </mat-form-field>
         <button mat-raised-button type="submit" color="primary" [disabled]="loading > 0 || form.invalid" class="float-right">SUBMIT
         </button>
       </div>
@@ -95,7 +89,7 @@ export class StudentRegComponent implements OnInit {
 
   loading = 0;
 
-  departments: Department[] = [];
+  department: number;
   semesters: Semester[] = [];
   religions = ['islam', 'hinduism', 'christianity', 'buddhism', 'other'];
   genders = ['male', 'female', 'other'];
@@ -108,10 +102,6 @@ export class StudentRegComponent implements OnInit {
 
   get semester() {
     return this.form.get('semester');
-  }
-
-  get department() {
-    return this.form.get('department');
   }
 
   get hall() {
@@ -157,11 +147,10 @@ export class StudentRegComponent implements OnInit {
   }
 
 
-  constructor(private dp: DatePipe, private fb: FormBuilder, private ds: DepartmentService, private router: Router, private ss: StudentService) {
+  constructor(private sb: MatSnackBar, private admin: AdminService, private dp: DatePipe, private fb: FormBuilder, private ds: DepartmentService, private router: Router, private ss: StudentService, private route: ActivatedRoute) {
     this.form = fb.group({
       id: fb.control('', Validators.pattern(/^[1-9]\d{7}$/)),
       name: fb.control('', Validators.required),
-      department: fb.control('', Validators.required),
       hall: fb.control('', Validators.required),
       semester: fb.control('', Validators.required),
       gender: fb.control('', Validators.required),
@@ -176,8 +165,11 @@ export class StudentRegComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loading++;
-    this.loadDepartments();
+    this.route.params.subscribe(value => {
+      this.department = value.deptId;
+      this.loadSemesters();
+      this.loadHalls();
+    });
     this.generateSessions();
   }
 
@@ -185,19 +177,22 @@ export class StudentRegComponent implements OnInit {
     this.loading++;
     const student: Student = this.form.value;
     student.dob = this.dp.transform(this.form.value.dob, 'yyyy-MM-dd');
+    student.department = this.department;
     console.log(student);
     this.ss.register(student).subscribe(
       res => {
         this.loading--;
-        this.router.navigate(['/login/student/']);
+        this.ds.studentAdded.next(student);
+        this.sb.open('Registration successful.', 'OK');
       }, error1 => {
-        console.log(error1);
+        this.sb.open('Error registering student.', 'OK');
         this.loading--;
       });
   }
 
   loadSemesters() {
-    this.ds.getSemesters(this.department.value).subscribe(
+    this.loading++;
+    this.ds.getSemesters(this.department).subscribe(
       data => {
         this.semesters = data;
         this.loading--;
@@ -206,18 +201,9 @@ export class StudentRegComponent implements OnInit {
       });
   }
 
-  loadDepartments() {
-    this.ds.getAllDepartments().subscribe(
-      data => {
-        this.departments = data;
-        this.loading--;
-      }, error => {
-        this.loading--;
-      });
-  }
-
   loadHalls() {
-    this.ds.getHalls(this.department.value).subscribe(
+    this.loading++;
+    this.ds.getHalls(this.department).subscribe(
       data => {
         this.halls = data;
         this.loading--;
@@ -230,11 +216,5 @@ export class StudentRegComponent implements OnInit {
     for (let i = (new Date()).getFullYear(); i > 1966; i--) {
       this.sessions.push((i - 1) + ' - ' + i);
     }
-  }
-
-  onDeptChange() {
-    this.loading += 2;
-    this.loadSemesters();
-    this.loadHalls();
   }
 }

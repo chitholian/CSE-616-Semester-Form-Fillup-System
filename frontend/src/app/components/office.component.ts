@@ -14,6 +14,12 @@ import {AdminService} from '../services/admin.service';
         <mat-icon>menu</mat-icon>
       </button>
       {{auth.user.name}}<span class="spacer"></span>
+      <button (click)="gotoStudentList()" mat-icon-button type="button" title="View All Students">
+        <mat-icon>view_list</mat-icon>
+      </button>
+      <button (click)="gotoAddStudent()" mat-icon-button type="button" title="Add new student.">
+        <mat-icon>add</mat-icon>
+      </button>
       <button (click)="logout()" mat-icon-button type="button" title="Logout">
         <mat-icon>logout</mat-icon>
       </button>
@@ -92,5 +98,13 @@ export class OfficeComponent implements OnInit {
 
   shouldInput(exam) {
     return (new Date(exam.ldo_form_fill_up)) < (new Date());
+  }
+
+  gotoAddStudent() {
+    this.router.navigate(['../dept-office/register-student', {deptId: this.department.id}]);
+  }
+
+  gotoStudentList() {
+    this.router.navigate(['../dept-office/all-students', {deptId: this.department.id}]);
   }
 }
