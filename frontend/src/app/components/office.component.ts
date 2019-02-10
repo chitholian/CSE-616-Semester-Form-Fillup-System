@@ -56,38 +56,36 @@ export class OfficeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loading++;
     this.loadDepartment();
     this.auth.examChanged.subscribe(val => {
-      this.loading++;
       this.loadExams();
     });
   }
 
   loadExams() {
+    this.loading++;
     this.ds.getExams(this.department.id).subscribe(data => {
       this.exams = data;
       this.loading--;
     }, error1 => {
-      console.log(error1);
       this.loading--;
-      this.sb.open('Error loading exams', 'OK');
+      this.sb.open('Error loading exams.', 'OK', { duration: 4000 });
     });
   }
 
   loadDepartment() {
+    this.loading++;
     this.admin.getDepartmentsOfChairman(this.auth.user.user).subscribe(data => {
       if (data.length > 0) {
         this.department = data[0];
         this.loadExams();
       } else {
-        this.sb.open('Loading department failed', 'OK');
+        this.sb.open('Sorry, you are not associated with any department. You cannot add or view students.', 'OK', {duration: 5000});
       }
       this.loading--;
     }, error1 => {
-      console.log(error1);
       this.loading--;
-      this.sb.open('Loading department failed', 'OK');
+      this.sb.open('Loading department failed. You cannot add or view students.', 'OK', { duration: 5000 });
     });
   }
 

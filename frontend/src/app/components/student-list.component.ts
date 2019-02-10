@@ -65,7 +65,7 @@ export class StudentListComponent implements OnInit {
       this.loading--;
     }, error1 => {
       this.loading--;
-      this.sb.open('Error loading students.', 'OK');
+      this.sb.open('Error loading students.', 'OK', { duration: 4000 });
     });
   }
 }

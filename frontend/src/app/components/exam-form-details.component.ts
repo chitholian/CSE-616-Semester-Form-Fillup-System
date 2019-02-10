@@ -11,7 +11,7 @@ import {AuthService} from '../services/auth.service';
   template: `
     <div class="panel" *ngIf="exam != null">
       <mat-toolbar>{{exam.title}}<span class="spacer"></span>
-        Total Paid: {{totalPaidNumber}} {{(totalPaidNumber > 1 ? 'Students': 'Student')}} <span
+        Total Paid: {{totalPaidNumber}} {{(totalPaidNumber > 1 ? 'Students' : 'Student')}} <span
           *ngIf="exam.status < 6 && !expired(exam)">, Payable Until: <strong>{{exam.ldo_payment|date:'MMMM dd, yyy'}}</strong></span>
       </mat-toolbar>
       <table mat-table [dataSource]="forms" class="panel-content">
@@ -98,8 +98,7 @@ export class ExamFormDetailsComponent implements OnInit {
       this.exam = res;
       this.loading--;
     }, err => {
-      console.log(err);
-      this.sb.open('Error loading exam info or not found.', 'OK');
+      this.sb.open('Error loading exam info or not found.', 'OK', {duration: 4000});
       this.loading--;
     });
   }
@@ -111,7 +110,10 @@ export class ExamFormDetailsComponent implements OnInit {
         return value.attendance >= 60;
       });
       this.loading--;
-    }, error1 => this.loading--);
+    }, error1 => {
+      this.loading--;
+      this.sb.open('Error loading forms.', 'OK', {duration: 4000});
+    });
   }
 
   finishExam() {
@@ -125,7 +127,7 @@ export class ExamFormDetailsComponent implements OnInit {
       this.router.navigate(['/dept-chairman']);
     }, error1 => {
       this.loading--;
-      this.sb.open('Error finishing exam.', 'OK');
+      this.sb.open('Error finishing exam.', 'OK', {duration: 4000});
     });
   }
 
@@ -140,7 +142,7 @@ export class ExamFormDetailsComponent implements OnInit {
       this.router.navigate(['/dept-chairman']);
     }, error1 => {
       this.loading--;
-      this.sb.open('Error deleting exam.', 'OK');
+      this.sb.open('Error deleting exam.', 'OK', {duration: 4000});
     });
   }
 }

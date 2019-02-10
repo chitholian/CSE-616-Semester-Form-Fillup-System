@@ -63,9 +63,8 @@ export class BankComponent implements OnInit {
       this.exams = data;
       this.loading--;
     }, error1 => {
-      console.log(error1);
       this.loading--;
-      this.sb.open('Error loading exams', 'OK');
+      this.sb.open('Error loading exams', 'OK', { duration: 4000 });
     });
   }
 

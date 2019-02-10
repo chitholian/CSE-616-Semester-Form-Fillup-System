@@ -11,6 +11,7 @@ import {AuthService} from '../services/auth.service';
   template: `
     <div class="panel" *ngIf="exam != null">
       <mat-toolbar>{{exam.title}}<span class="spacer"></span>Payable until: {{exam.ldo_payment | date :'MMMM dd, yyyy'}} </mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <table mat-table [dataSource]="forms" class="panel-content">
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
@@ -41,7 +42,7 @@ import {AuthService} from '../services/auth.service';
       </table>
     </div>
   `,
-  styles: []
+  styles: [`mat-progress-bar{width: 100%;position: fixed;top: 64px;}`]
 })
 export class ConfirmPaymentComponent implements OnInit {
 
@@ -75,8 +76,7 @@ export class ConfirmPaymentComponent implements OnInit {
       }
       this.loading--;
     }, err => {
-      console.log(err);
-      this.sb.open('Error loading exam info or not found.', 'OK');
+      this.sb.open('Error loading exam info or not found.', 'OK', {duration: 4000});
       this.loading--;
     });
   }
@@ -88,7 +88,10 @@ export class ConfirmPaymentComponent implements OnInit {
         return value.attendance >= 60;
       });
       this.loading--;
-    }, error1 => this.loading--);
+    }, error1 => {
+      this.loading--;
+      this.sb.open('Error loading forms.', 'OK', {duration: 4000});
+    });
   }
 
   toggleFormStatus(form) {
@@ -101,8 +104,7 @@ export class ConfirmPaymentComponent implements OnInit {
       form.status = target;
       this.loading--;
     }, error1 => {
-      console.log(error1);
-      this.sb.open('Error processing request.', 'OK');
+      this.sb.open('Error processing request.', 'OK', {duration: 4000});
       this.loading--;
     });
   }

@@ -11,6 +11,7 @@ import {AuthService} from '../services/auth.service';
   template: `
     <div class="panel" *ngIf="exam != null">
       <mat-toolbar>{{exam.title}}</mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <table mat-table [dataSource]="forms" class="panel-content">
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
@@ -43,7 +44,7 @@ import {AuthService} from '../services/auth.service';
       </div>
     </div>
   `,
-  styles: []
+  styles: [`mat-progress-bar{width: 100%;position: fixed;top: 64px;}`]
 })
 export class InputAttendanceComponent implements OnInit {
 
@@ -68,22 +69,20 @@ export class InputAttendanceComponent implements OnInit {
     for (const f of this.forms) {
       console.log(f.attendance);
       if (f.attendance === -1) {
-        this.sb.open('There are unchecked fields (i.e. negative values). Please make them zero at least.', 'OK');
+        this.sb.open('There are unchecked fields (i.e. negative values). Please make them zero at least.', 'OK', { duration: 4000 });
         this.loading--;
         return;
       }
     }
-    if (confirm('Are you sure to submit the entire entries ? You cannot undo this.')) {
+    if (confirm('Are you sure to submit all the entries ? You cannot undo this.')) {
       // Send the entire array of forms to the server.
-      console.log(this.forms);
       this.es.inputAttendances(this.forms).subscribe(res => {
         this.as.examChanged.next(true);
         this.loading--;
         this.router.navigate(['/dept-office']);
       }, error1 => {
         this.loading--;
-        console.log(error1);
-        this.sb.open('Error processing request.', 'OK');
+        this.sb.open('Error processing request.', 'OK', { duration: 4000 });
       });
     } else {
       this.loading--;
@@ -108,8 +107,7 @@ export class InputAttendanceComponent implements OnInit {
       }
       this.loading--;
     }, err => {
-      console.log(err);
-      this.sb.open('Error loading exam info or not found.', 'OK');
+      this.sb.open('Error loading exam info or not found.', 'OK', { duration: 4000 });
       this.loading--;
     });
   }
@@ -117,6 +115,10 @@ export class InputAttendanceComponent implements OnInit {
   loadForms(examId) {
     this.es.getForms(examId).subscribe(res => {
       this.forms = res;
+      this.loading--;
+    }, error1 => {
+      this.sb.open('Error loading forms.', 'OK', { duration: 4000 });
+      this.loading--;
     });
   }
 

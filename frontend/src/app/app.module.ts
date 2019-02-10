@@ -9,7 +9,6 @@ import {LoginComponent} from './components/login.component';
 import {StudentLoginComponent} from './components/student-login.component';
 import {StudentRegComponent} from './components/student-reg.component';
 import {StudentDashboardComponent} from './components/student-dashboard.component';
-import {ExamFormComponent} from './components/exam-form.component';
 import {AuthService} from './services/auth.service';
 import {DepartmentService} from './services/department.service';
 import {SemesterService} from './services/semester.service';
@@ -40,7 +39,6 @@ import { UserDashBoardComponent } from './components/user-dash-board.component';
     StudentLoginComponent,
     StudentRegComponent,
     StudentDashboardComponent,
-    ExamFormComponent,
     NotFoundComponent,
     ChairmanDashboardComponent,
     ProvostComponent,

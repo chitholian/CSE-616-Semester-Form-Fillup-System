@@ -9,6 +9,7 @@ import {MatSnackBar} from '@angular/material';
   template: `
     <form class="panel mid-center" [formGroup]="form" (ngSubmit)="submit()">
       <mat-toolbar color="primary">Administrative Login</mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <div class="panel-content">
         <mat-form-field>
           <input matInput required placeholder="Username" [formControl]="username" name="username">
@@ -77,13 +78,12 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['accounts']);
             break;
           default:
-            this.sb.open('Admin role does not exists.', 'OK');
+            this.sb.open('Admin role does not exists.', 'OK', { duration: 4000 });
         }
       }, 300);
     }, error => {
       this.loading--;
-      this.sb.open('Login failed.', 'OK');
-      console.log(error);
+      this.sb.open('Login failed.', 'OK', { duration: 4000 });
     });
   }
 }

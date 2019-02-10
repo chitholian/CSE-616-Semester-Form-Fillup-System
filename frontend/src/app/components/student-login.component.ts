@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
   template: `
     <form class="panel mid-center" [formGroup]="form" (ngSubmit)="submit()">
       <mat-toolbar color="primary">Student Login</mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <div class="panel-content of-hidden">
         <mat-form-field>
           <input matInput required type="number" placeholder="Student ID" [formControl]="id" name="id">
@@ -28,7 +29,7 @@ import {Router} from '@angular/router';
           </mat-select>
           <mat-error *ngIf="semester.invalid">A semester is required</mat-error>
         </mat-form-field>
-        <button mat-raised-button type="submit" color="primary" class="float-right">LOGIN</button>
+        <button mat-raised-button [disabled]="loading > 0 || form.invalid" type="submit" color="primary" class="float-right">LOGIN</button>
       </div>
     </form>
   `,
@@ -80,13 +81,13 @@ export class StudentLoginComponent implements OnInit {
         if (this.department.value === res.department && this.semester.value === res.semester) {
           this.router.navigate(['/student']);
         } else {
-          this.snackBar.open('Login failed.', 'OK');
+          this.snackBar.open('Login failed.', 'OK', {duration: 4000});
         }
         this.loading--;
       },
       error1 => {
         this.loading--;
-        this.snackBar.open('Login failed.', 'OK');
+        this.snackBar.open('Login failed.', 'OK', {duration: 4000});
       }
     );
   }
@@ -101,6 +102,7 @@ export class StudentLoginComponent implements OnInit {
 
       }, error => {
         this.loading--;
+        this.snackBar.open('Error loading semesters.', 'OK', {duration: 4000});
       });
   }
 }

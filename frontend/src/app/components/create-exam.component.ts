@@ -13,6 +13,7 @@ import {MatSnackBar} from '@angular/material';
   template: `
     <form [formGroup]="form" (ngSubmit)="submit()" class="panel">
       <mat-toolbar>Arrange an Examination</mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <div class="panel-content of-hidden">
         <div class="col-1-2">
 
@@ -135,10 +136,10 @@ export class CreateExamComponent implements OnInit {
     d.ldo_payment = this.dp.transform(d.ldo_payment, 'yyyy-MM-dd');
     this.es.createExam(d).subscribe(data => {
       this.loading--;
-      this.sb.open('Exam Created Successfully.', 'OK');
+      this.sb.open('Exam Created Successfully.', 'OK', { duration: 4000 });
       this.auth.examChanged.next(true);
     }, error1 => {
-      this.sb.open('Error creating exam.', 'OK');
+      this.sb.open('Error creating exam.', 'OK', { duration: 4000 });
       this.loading--;
     });
   }
@@ -150,9 +151,8 @@ export class CreateExamComponent implements OnInit {
         this.semesters = data;
         this.loading--;
       }, error1 => {
-        console.log(error1);
         this.loading--;
-        this.sb.open('Error loading semesters.', 'OK');
+        this.sb.open('Error loading semesters.', 'OK', { duration: 4000 });
       });
     });
   }

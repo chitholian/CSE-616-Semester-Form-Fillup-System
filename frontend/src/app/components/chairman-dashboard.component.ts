@@ -68,9 +68,8 @@ export class ChairmanDashboardComponent implements OnInit {
       this.exams = data;
       this.loading--;
     }, error1 => {
-      console.log(error1);
       this.loading--;
-      this.sb.open('Error loading exams', 'OK');
+      this.sb.open('Error loading exams', 'OK', {duration: 4000});
     });
   }
 
@@ -80,13 +79,12 @@ export class ChairmanDashboardComponent implements OnInit {
         this.department = data[0];
         this.loadExams();
       } else {
-        this.sb.open('Loading department failed', 'OK');
+        this.sb.open('Sorry, you are not associated with any department. You cannot add or view students or arrange new exam.', 'OK', {duration: 5000});
       }
       this.loading--;
     }, error1 => {
-      console.log(error1);
       this.loading--;
-      this.sb.open('Loading department failed', 'OK');
+      this.sb.open('Loading department failed. You cannot add or view students or arrange new exam.', 'OK', {duration: 5000});
     });
   }
 

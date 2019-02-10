@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {SemesterService} from '../services/semester.service';
 import {StudentService} from '../services/student.service';
 import {ExamService} from '../services/exam.service';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -16,12 +17,13 @@ import {ExamService} from '../services/exam.service';
     </mat-toolbar>
     <div class="panel" *ngFor="let e of exams">
       <mat-toolbar>{{e.title}}<span class="spacer"></span>
-        <button mat-button *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)" (click)="applyNow(e)" [disabled]="loading > 0">APPLY
-          NOW
+        <button mat-button *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)" (click)="applyNow(e)"
+                [disabled]="loading > 0">APPLY NOW
         </button>
         <mat-error *ngIf="examForm.status == 0 && expired(e.ldo_form_fill_up)">Application Deadline Expired</mat-error>
         <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Payment Deadline Expired</mat-error>
       </mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <table mat-table [dataSource]="courses" class="panel-content">
         <ng-container matColumnDef="code">
           <th mat-header-cell *matHeaderCellDef>Course Code</th>
@@ -43,12 +45,12 @@ import {ExamService} from '../services/exam.service';
       </table>
       <div class="panel-footer of-hidden">
         <span class="float-right" *ngIf="examForm.status > 1">Attendance: {{examForm.attendance}}%</span>
-        <strong>Status: </strong>
         <mat-error *ngIf="examForm.status > 1 && examForm.attendance < 60">Form rejected due to low attendance
         </mat-error>
         <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Form rejected due to no payment
         </mat-error>
-        <span *ngIf="!(e.status > 1 && examForm.attendance < 60) && !(expired(e.ldo_payment) && examForm.status < 6)">
+        <span *ngIf="!(examForm.status > 1 && examForm.attendance < 60) && !(expired(e.ldo_payment) && examForm.status < 6)">
+          <strong>Status: </strong>
           {{statusMessages[examForm.status]}}</span>
         <p *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)">Last Date of Application:
           <strong>{{e.ldo_form_fill_up|date:'MMMM dd, yyyy'}}</strong></p>
@@ -84,7 +86,7 @@ export class StudentDashboardComponent implements OnInit {
     return this.student != null;
   }
 
-  constructor(private auth: AuthService, private router: Router, private ss: SemesterService, private std: StudentService, private es: ExamService) {
+  constructor(private sb: MatSnackBar, private auth: AuthService, private router: Router, private ss: SemesterService, private std: StudentService, private es: ExamService) {
   }
 
   ngOnInit() {
@@ -106,8 +108,8 @@ export class StudentDashboardComponent implements OnInit {
       this.loading--;
       this.checkIfApplied(exam.id);
     }, error1 => {
-      console.log(error1);
       this.loading--;
+      this.sb.open('Application failed.', 'OK', {duration: 4000});
     });
   }
 
@@ -136,11 +138,11 @@ export class StudentDashboardComponent implements OnInit {
         this.courses = d.courses;
         this.ss.getInfo(this.student.semester);
       }, error => {
-        console.log(error);
+        this.sb.open('Error loading semester info.', 'OK', {duration: 4000});
         this.loading--;
       });
     }, error1 => {
-      console.log(error1);
+      this.sb.open('Error loading exams.', 'OK', {duration: 4000});
       this.loading--;
     });
   }
@@ -154,7 +156,7 @@ export class StudentDashboardComponent implements OnInit {
       this.loading--;
     }, error1 => {
       this.loading--;
-      console.log(error1);
+      this.sb.open('Checking application status failed.', 'OK', {duration: 4000});
     });
   }
 

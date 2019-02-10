@@ -13,6 +13,7 @@ import {MatSnackBar} from '@angular/material';
   template: `
     <form class="panel" [formGroup]="form" (ngSubmit)="submit()">
       <mat-toolbar>Student Registration</mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <div class="panel-content of-hidden">
         <div class="col-1-2">
           <mat-form-field>
@@ -178,14 +179,13 @@ export class StudentRegComponent implements OnInit {
     const student: Student = this.form.value;
     student.dob = this.dp.transform(this.form.value.dob, 'yyyy-MM-dd');
     student.department = this.department;
-    console.log(student);
     this.ss.register(student).subscribe(
       res => {
         this.loading--;
         this.ds.studentAdded.next(student);
-        this.sb.open('Registration successful.', 'OK');
+        this.sb.open('Registration successful.', 'OK', {duration: 4000});
       }, error1 => {
-        this.sb.open('Error registering student.', 'OK');
+        this.sb.open('Failed to register student. May be ID already exists.', 'OK', {duration: 4000});
         this.loading--;
       });
   }
@@ -198,6 +198,7 @@ export class StudentRegComponent implements OnInit {
         this.loading--;
       }, error => {
         this.loading--;
+        this.sb.open('Error loading semesters.', 'OK', {duration: 4000});
       });
   }
 
@@ -209,6 +210,7 @@ export class StudentRegComponent implements OnInit {
         this.loading--;
       }, error => {
         this.loading--;
+        this.sb.open('Error loading halls.', 'OK', {duration: 4000});
       });
   }
 
