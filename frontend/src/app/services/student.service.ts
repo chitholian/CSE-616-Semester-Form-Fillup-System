@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth.service';
-import {ExamForm, Student} from '../custom/interfaces';
+import {ExamForm} from '../custom/interfaces';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class StudentService {
   constructor(private auth: AuthService) {
   }
 
-  register(data: Student) {
+  register(data) {
     return this.auth.post<any>('/api/students/', data);
   }
 

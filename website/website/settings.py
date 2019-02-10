@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'frontend',
     'rest_framework',
     'rest_framework.authtoken',
+    'qr_code',
 ]
 
 MIDDLEWARE = [
@@ -122,7 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'avatars')
+MEDIA_URL = '/avatars/'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',

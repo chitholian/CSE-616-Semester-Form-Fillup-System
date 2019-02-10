@@ -20,6 +20,8 @@ import {MatSnackBar} from '@angular/material';
         <button mat-button *ngIf="examForm.status == 0 && !expired(e.ldo_form_fill_up)" (click)="applyNow(e)"
                 [disabled]="loading > 0">APPLY NOW
         </button>
+        <a mat-button *ngIf="examForm.status > 5" [href]="'/api/exam-forms/'+examForm.id+'/admit/'">
+          <mat-icon>cloud_download</mat-icon> Download Admit Card</a>
         <mat-error *ngIf="examForm.status == 0 && expired(e.ldo_form_fill_up)">Application Deadline Expired</mat-error>
         <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Payment Deadline Expired</mat-error>
       </mat-toolbar>

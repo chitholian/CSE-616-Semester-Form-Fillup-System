@@ -1,92 +1,116 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Department, Hall, Semester, Student} from '../custom/interfaces';
+import {Hall, Semester, Student} from '../custom/interfaces';
 import {DepartmentService} from '../services/department.service';
 import {StudentService} from '../services/student.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {AdminService} from '../services/admin.service';
 import {MatSnackBar} from '@angular/material';
+import {hasOwnProperty} from 'tslint/lib/utils';
 
 @Component({
   selector: 'app-student-reg',
   template: `
-    <form class="panel" [formGroup]="form" (ngSubmit)="submit()">
-      <mat-toolbar>Student Registration</mat-toolbar>
-      <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
-      <div class="panel-content of-hidden">
-        <div class="col-1-2">
-          <mat-form-field>
-            <input matInput required type="number" placeholder="Student ID" [formControl]="id" name="id">
-            <mat-error *ngIf="id.invalid">A valid Student ID is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput required placeholder="Full Name" [formControl]="name" name="name">
-            <mat-error *ngIf="name.invalid">A valid Name is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select [formControl]="gender" required placeholder="Gender">
-              <mat-option *ngFor="let s of genders" [value]="s">{{s|titlecase}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="gender.invalid">Gender is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select [disabled]="loading > 0" [formControl]="semester" required placeholder="Semester">
-              <mat-option *ngFor="let s of semesters" [value]="s.id">Semester {{s.number}}, Year {{s.year}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="semester.invalid">A semester is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select [disabled]="loading > 0 || gender.invalid" [formControl]="hall" required placeholder="Hall">
-              <ng-container *ngFor="let s of halls">
-                <mat-option *ngIf="s.gender == gender.value" [value]="s.id">{{s.name}}</mat-option>
-              </ng-container>
-            </mat-select>
-            <mat-error *ngIf="hall.invalid">Hall is required</mat-error>
-          </mat-form-field>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading > 0"></mat-progress-bar>
+    <form [formGroup]="form" (ngSubmit)="submit()" enctype="multipart/form-data">
+      <div class="panel-content">
+        <div id="pic-zone">
+          <input (change)="readURL($event)" accept=".jpeg, .jpg, .png, .gif"
+                 #fileInput type="file" style="display: none;" required>
+          <img (click)="fileInput.click()" #previewField alt="Photo" [src]="imageSrc || '/static/frontend/assets/no-image.gif'"
+               id="preview"/>
         </div>
-        <div class="col-1-2">
+        <div>
+          <div class="col-1-2">
+            <mat-form-field>
+              <input matInput required type="number" placeholder="Student ID" [formControl]="id" name="id">
+              <mat-error *ngIf="id.invalid">A valid Student ID is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput required placeholder="Full Name" [formControl]="name" name="name">
+              <mat-error *ngIf="name.invalid">A valid Name is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [formControl]="gender" required placeholder="Gender">
+                <mat-option *ngFor="let s of genders" [value]="s">{{s|titlecase}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="gender.invalid">Gender is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [disabled]="loading > 0" [formControl]="semester" required placeholder="Semester">
+                <mat-option *ngFor="let s of semesters" [value]="s.id">Semester {{s.number}}, Year {{s.year}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="semester.invalid">A semester is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [disabled]="loading > 0 || gender.invalid" [formControl]="hall" required placeholder="Hall">
+                <ng-container *ngFor="let s of halls">
+                  <mat-option *ngIf="s.gender == gender.value" [value]="s.id">{{s.name}}</mat-option>
+                </ng-container>
+              </mat-select>
+              <mat-error *ngIf="hall.invalid">Hall is required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-1-2">
+            <mat-form-field>
+              <mat-select [formControl]="religion" required placeholder="Religion">
+                <mat-option *ngFor="let s of religions" [value]="s">{{s|titlecase}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="religion.invalid">Religion is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select [formControl]="session" required placeholder="Session">
+                <mat-option *ngFor="let s of sessions" [value]="s">{{s}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="session.invalid">Session is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input type="email" [formControl]="email" required matInput placeholder="Email" name="email">
+              <mat-error *ngIf="email.invalid">A valid email address is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input [formControl]="phone" maxlength="20" required matInput placeholder="Phone" name="phone">
+              <mat-error *ngIf="phone.invalid">A valid phone number is required</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput required [formControl]="dob" placeholder="Date of birth" [matDatepicker]="picker"
+                     name="dob">
+              <mat-datepicker-toggle #toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="dob.invalid">A valid date of birth is required</mat-error>
+            </mat-form-field>
+          </div>
           <mat-form-field>
-            <mat-select [formControl]="religion" required placeholder="Religion">
-              <mat-option *ngFor="let s of religions" [value]="s">{{s|titlecase}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="religion.invalid">Religion is required</mat-error>
+            <textarea matInput required cols="2" placeholder="Address" name="address" [formControl]="address"></textarea>
+            <mat-error *ngIf="address.invalid">Address is required</mat-error>
           </mat-form-field>
-          <mat-form-field>
-            <mat-select [formControl]="session" required placeholder="Session">
-              <mat-option *ngFor="let s of sessions" [value]="s">{{s}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="session.invalid">Session is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <input type="email" [formControl]="email" required matInput placeholder="Email" name="email">
-            <mat-error *ngIf="email.invalid">A valid email address is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <input [formControl]="phone" maxlength="20" required matInput placeholder="Phone" name="phone">
-            <mat-error *ngIf="phone.invalid">A valid phone number is required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput required [formControl]="dob" placeholder="Date of birth" [matDatepicker]="picker"
-                   name="dob">
-            <mat-datepicker-toggle #toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="dob.invalid">A valid date of birth is required</mat-error>
-          </mat-form-field>
+          <button mat-raised-button type="submit" color="primary" [disabled]="photo == null || loading > 0 || form.invalid"
+                  class="float-right">SUBMIT
+          </button>
         </div>
-        <mat-form-field>
-          <textarea matInput required cols="2" placeholder="Address" name="address" [formControl]="address"></textarea>
-          <mat-error *ngIf="address.invalid">Address is required</mat-error>
-        </mat-form-field>
-        <button mat-raised-button type="submit" color="primary" [disabled]="loading > 0 || form.invalid" class="float-right">SUBMIT
-        </button>
       </div>
     </form>
   `,
-  styles: []
+  styles: [`
+    #preview {
+      width: 180px;
+      height: 200px;
+      border: 1px solid black;
+      border-radius: 3px;
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    #pic-zone {
+      text-align: center;
+    }
+  `]
 })
 export class StudentRegComponent implements OnInit {
   form: FormGroup;
+  @ViewChild('fileInput') fileInput;
+  @ViewChild('previewField') previewField;
 
   loading = 0;
 
@@ -147,6 +171,9 @@ export class StudentRegComponent implements OnInit {
     return this.form.get('religion');
   }
 
+  imageSrc: string;
+  photo: File;
+
 
   constructor(private sb: MatSnackBar, private admin: AdminService, private dp: DatePipe, private fb: FormBuilder, private ds: DepartmentService, private router: Router, private ss: StudentService, private route: ActivatedRoute) {
     this.form = fb.group({
@@ -175,11 +202,23 @@ export class StudentRegComponent implements OnInit {
   }
 
   submit() {
+    if (this.photo === null) {
+      this.sb.open('Please select student\'s photo.', 'OK');
+      return;
+    }
     this.loading++;
-    const student: Student = this.form.value;
+    const student = this.form.value;
     student.dob = this.dp.transform(this.form.value.dob, 'yyyy-MM-dd');
     student.department = this.department;
-    this.ss.register(student).subscribe(
+    student.avatar = this.imageSrc;
+    const formData = new FormData();
+    formData.append('avatar', this.photo);
+    for (const k in student) {
+      if (student.hasOwnProperty(k)) {
+        formData.append(k, student[k]);
+      }
+    }
+    this.ss.register(formData).subscribe(
       res => {
         this.loading--;
         this.ds.studentAdded.next(student);
@@ -217,6 +256,17 @@ export class StudentRegComponent implements OnInit {
   generateSessions() {
     for (let i = (new Date()).getFullYear(); i > 1966; i--) {
       this.sessions.push((i - 1) + ' - ' + i);
+    }
+  }
+
+  readURL(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      this.photo = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (ev: any) => {
+        this.imageSrc = ev.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
     }
   }
 }

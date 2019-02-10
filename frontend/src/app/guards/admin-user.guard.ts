@@ -20,7 +20,6 @@ export class AdminUserGuard implements CanActivate, CanActivateChild, CanLoad {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    console.log('This is URL'+ state.url);
     if (state.url.startsWith('/dept-chairman')) {
       if (this.auth.user && this.auth.user.type === 'chairman') {
         return true;

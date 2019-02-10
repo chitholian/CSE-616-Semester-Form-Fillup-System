@@ -1,6 +1,11 @@
+import json
+
+from django.http import HttpResponse
+from django.template.loader import get_template
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from weasyprint import HTML
 
 from .serializers import *
 
@@ -107,6 +112,28 @@ class ExamViewSet(viewsets.ModelViewSet):
 class ExamFormViewSet(viewsets.ModelViewSet):
     queryset = ExamForm.objects.all()
     serializer_class = ExamFormSerializer
+
+    @action(methods=permissions.SAFE_METHODS, detail=True)
+    def admit(self, request, pk=None):
+        form = self.get_object()
+        if form.status < 6:
+            return HttpResponse('Payment must be completed to download admit card.', status=status.HTTP_402_PAYMENT_REQUIRED)
+        exam = Exam.objects.filter(examform=form).first()
+        student = Student.objects.filter(examform=form).first()
+        semester = Semester.objects.filter(student=student)
+        html = get_template('admit_card.html').render({
+            'exam': exam,
+            'student': student,
+            'semester': semester,
+            'form': form,
+            'qrtext': '{} :=: {} :=: {}'.format(
+                student.id, student.name, exam.title
+            )
+        })
+        pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="' + str(student.id) + '.pdf"'
+        return response
 
 
 class InputAttendanceView(generics.UpdateAPIView):

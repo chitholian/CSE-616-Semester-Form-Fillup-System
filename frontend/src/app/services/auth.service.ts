@@ -16,7 +16,6 @@ export class AuthService {
   constructor(private http: HttpClient) {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.student = JSON.parse(sessionStorage.getItem('student'));
-    console.log(this.user);
   }
 
   get<T>(url): Observable<T> {

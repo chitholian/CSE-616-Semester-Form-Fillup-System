@@ -19,7 +19,7 @@ import {Component, OnInit} from '@angular/core';
           <strong>University of Chittagong</strong>
         </div>
         <div class="col-1-5">
-          <h4>Md. Foysal Hossain</h4>
+          <h4>Foysal Hossain</h4>
           ID: <strong>16701007</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
@@ -36,7 +36,7 @@ import {Component, OnInit} from '@angular/core';
           <strong>University of Chittagong</strong>
         </div>
         <div class="col-1-5">
-          <h4>Jawwad Bin Zahir</h4>
+          <h4>Md Jawwad Bin Zahir Seemanta</h4>
           ID: <strong>16701051</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
@@ -44,7 +44,7 @@ import {Component, OnInit} from '@angular/core';
         </div>
         <div class="col-1-5">
           <h4>Tamanna Akhter Mukta</h4>
-          ID: <strong>167010**</strong><br>
+          ID: <strong>16701072</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
           <strong>University of Chittagong</strong>

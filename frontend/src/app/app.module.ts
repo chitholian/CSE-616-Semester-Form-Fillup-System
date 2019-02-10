@@ -31,6 +31,7 @@ import {ExamFormDetailsComponent} from './components/exam-form-details.component
 import { StudentListComponent } from './components/student-list.component';
 import { HomePageComponent } from './components/home-page.component';
 import { UserDashBoardComponent } from './components/user-dash-board.component';
+import {MatProgressSpinnerModule} from '@angular/material';
 
 @NgModule({
   declarations: [

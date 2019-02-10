@@ -58,7 +58,6 @@ export class LoginComponent implements OnInit {
   submit() {
     this.loading++;
     this.auth.loginAdmin(this.form.value).subscribe(res => {
-      console.log(this.auth.user);
       setTimeout(() => {
         this.loading--;
         switch (this.auth.user.type) {

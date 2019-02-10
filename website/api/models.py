@@ -105,6 +105,7 @@ class Student(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     address = models.TextField(max_length=256)
+    avatar = models.ImageField()
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)

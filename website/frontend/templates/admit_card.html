@@ -1,0 +1,142 @@
+{% load static %}
+{% load qr_code %}
+<html>
+<head>
+    <style>
+
+        * {
+            text-align: center;
+        }
+
+        @page {
+            margin: 3mm;
+            padding: 5mm;
+            border: 1mm solid black;
+        }
+
+        #picture {
+            position: absolute;
+            width: 4cm;
+            height: 5cm;
+            right: 0;
+        }
+
+        #logo {
+            height: 3.2cm;
+            margin: 2mm auto;
+        }
+
+        #qrcode {
+            position: fixed;
+            left: 0;
+            display: inline-block;
+            height: 5cm;
+        }
+
+        #qrcode img {
+            height: 100%;
+        }
+
+        #watermark {
+            content: '';
+            background: url("{% static 'frontend/assets/cu-logo-black.png' %}") center no-repeat;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            position: fixed;
+        }
+
+        table {
+            margin-left: 0;
+        }
+
+        td {
+            text-align: left;
+            padding-right: 1cm;
+        }
+
+        li {
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+<div id="watermark"></div>
+
+<div class="admit-body">
+
+    {#    <img id="picture"#}
+    <img src="{{ student.avatar.url }}" id="picture"/>
+    <div id="qrcode">{% qr_from_text qrtext size=5 border=1 image_format="png" %}</div>
+
+
+    <div id="title">
+        <h2>University of Chittagong</h2>
+        <img id="logo" src="{% static 'frontend/assets/cu-logo-black.png' %}"/>
+        <h1>ADMIT CARD</h1>
+    </div>
+    <hr>
+    <h2>{{ exam.title }}</h2>
+    <div style="margin: 2mm;font-size: 5mm ">Department of <br> <h4>{{ student.department.name }}</h4></div>
+    <div style="margin: 1cm auto; line-height: 8mm; text-align: left;">
+        <table>
+            <tbody>
+            <tr>
+                <td>Student ID</td>
+                <td>:</td>
+                <td><strong>{{ student.id }}</strong></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td><strong>{{ student.name }}</strong></td>
+            </tr>
+            <tr>
+                <td>Session</td>
+                <td>:</td>
+                <td><strong>{{ student.session }}</strong></td>
+            </tr>
+            <tr>
+                <td>Semester</td>
+                <td>:</td>
+                <td><strong>{{ student.semester.number }}</strong></td>
+            </tr>
+            <tr>
+                <td>Year</td>
+                <td>:</td>
+                <td><strong>{{ student.semester.year }}</strong></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>:</td>
+                <td><strong>{{ student.gender.title }}</strong></td>
+            </tr>
+            <tr>
+                <td>Religion</td>
+                <td>:</td>
+                <td><strong>{{ student.religion.title }}</strong></td>
+            </tr>
+            <tr>
+                <td>Hall</td>
+                <td>:</td>
+                <td><strong>{{ student.hall.name }}</strong></td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>:</td>
+                <td><strong>{{ student.dob|date:'F d, Y' }}</strong></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div style="position: fixed;bottom: 0;text-align: left">
+    <h3>ATTENTION</h3>
+    <ul>
+        <li>Examinee own-self bears the responsibility of knowing the correct date and time of the examinations.</li>
+        <li>The Examinee must carry this Admit Card in the Examination Hall.</li>
+    </ul>
+</div>
+</body>
+</html>
