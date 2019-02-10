@@ -49,7 +49,8 @@ import {AuthService} from '../services/auth.service';
         <button mat-raised-button (click)="finishExam()" class="float-right" color="accent" *ngIf="expired(exam)">FINISH THIS
           EXAM
         </button>
-        <button mat-raised-button (click)="deleteExam()" class="float-right" color="warn" *ngIf="exam.status < 5">DELETE THIS EXAM</button>
+        <button mat-raised-button (click)="deleteExam()" class="float-right" color="warn" *ngIf="exam.status < 5">
+          <mat-icon>delete</mat-icon>DELETE THIS EXAM</button>
         <span *ngIf="exam.status == 1">Applicable Until: <strong>{{exam.ldo_form_fill_up|date:'MMMM dd, yyy'}}</strong></span>
         <mat-error *ngIf="exam.status == 6 || expired(exam)">Payment Date Over.</mat-error>
       </div>

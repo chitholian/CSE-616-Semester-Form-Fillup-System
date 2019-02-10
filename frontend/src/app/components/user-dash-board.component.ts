@@ -44,7 +44,7 @@ import {Component, OnInit} from '@angular/core';
         </div>
         <div class="col-1-5">
           <h4>Tamanna Akhter Mukta</h4>
-          ID: <strong>167010..</strong><br>
+          ID: <strong>167010**</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
           <strong>University of Chittagong</strong>
