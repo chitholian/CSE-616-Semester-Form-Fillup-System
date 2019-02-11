@@ -3,7 +3,8 @@
 This is an educational repository for a project of the 6th semster course **CSE 616** titled **Web Engineering Lab**.
 
 ## How to ?
-- Install **git >= 2.20.0, python >= 3.7, pip >= 18.1, virtualenv >= 16.2.0, nodejs >= v10.15.0, npm >= 6.4.1**
+- Install **git >= 2.20.0, python >= 3.7, pip >= 18.1, virtualenv >= 16.2.0, nodejs >= v10.15.0, npm >= 6.4.1, WeasyPrint >= 44**
+- Install GTK+ libraries (because **WeasyPrint** requires it). To do so follow instructions at [https://weasyprint.readthedocs.io/en/stable/install.html](https://weasyprint.readthedocs.io/en/stable/install.html)
 - Open a **Terminal** or **Command Prompt**
 - Clone this repository:
 
