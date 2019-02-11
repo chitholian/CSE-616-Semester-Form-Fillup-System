@@ -14,7 +14,7 @@ import {hasOwnProperty} from 'tslint/lib/utils';
   template: `
     <mat-progress-bar mode="indeterminate" *ngIf="loading > 0"></mat-progress-bar>
     <form [formGroup]="form" (ngSubmit)="submit()" enctype="multipart/form-data">
-      <div class="panel-content">
+      <div class="panel-content of-hidden">
         <div id="pic-zone">
           <input (change)="readURL($event)" accept=".jpeg, .jpg, .png, .gif"
                  #fileInput type="file" style="display: none;" required>
