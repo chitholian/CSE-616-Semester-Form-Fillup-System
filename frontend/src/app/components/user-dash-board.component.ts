@@ -19,7 +19,7 @@ import {Component, OnInit} from '@angular/core';
           <strong>University of Chittagong</strong>
         </div>
         <div class="col-1-5">
-          <h4>Foysal Hossain</h4>
+          <h4><a href="https://github.com/foysal07" target="_blank">FOYSAL HOSSAIN</a></h4>
           ID: <strong>16701007</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
@@ -29,14 +29,14 @@ import {Component, OnInit} from '@angular/core';
       <hr>
       <div class="of-hidden">
         <div class="col-1-5">
-          <h4>Ahsan Ullah</h4>
+          <h4><a href="https://github.com/AAAAAAAHSAN" target="_blank">AHSAN ULLAH</a></h4>
           ID: <strong>16701019</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
           <strong>University of Chittagong</strong>
         </div>
         <div class="col-1-5">
-          <h4>Md Jawwad Bin Zahir Seemanta</h4>
+          <h4><a href="https://github.com/JawwadSeemanta" target="_blank">JAWWAD BIN ZAHIR SEEMANTA</a></h4>
           ID: <strong>16701051</strong><br>
           Session: <strong>2015 - 2016</strong><br>
           Department of <br><strong>Computer Science and Engineering</strong><br>
