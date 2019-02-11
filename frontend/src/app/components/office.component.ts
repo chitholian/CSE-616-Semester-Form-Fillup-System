@@ -13,7 +13,7 @@ import {AdminService} from '../services/admin.service';
       <button (click)="drawer.toggle()" mat-icon-button type="button" title="Toggle Drawer">
         <mat-icon>menu</mat-icon>
       </button>
-      {{auth.user.name}}<span class="spacer"></span>
+      (Office) {{department.name}}<span class="spacer"></span>
       <button (click)="gotoAddStudent()" mat-icon-button type="button" title="Add new student.">
         <mat-icon>person_add</mat-icon>
       </button>
@@ -48,7 +48,8 @@ import {AdminService} from '../services/admin.service';
   styles: []
 })
 export class OfficeComponent implements OnInit {
-  department: Department;
+  // @ts-ignore
+  department: Department = {name: ''};
   exams: Exam[] = [];
   loading = 0;
 

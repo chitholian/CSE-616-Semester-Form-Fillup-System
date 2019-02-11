@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Course, Department, Exam, Semester} from '../custom/interfaces';
+import {Exam, Semester} from '../custom/interfaces';
 import {AuthService} from './auth.service';
 
 @Injectable({

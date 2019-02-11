@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
       <button (click)="drawer.toggle()" mat-icon-button type="button" title="Toggle Drawer">
         <mat-icon>menu</mat-icon>
       </button>
-      {{auth.user.name}}<span class="spacer"></span>
+      (Chairman) {{department.name}}<span class="spacer"></span>
       <button (click)="gotoCreateExam()" mat-icon-button type="button" title="Arrange an exam">
         <mat-icon>add</mat-icon>
       </button>
@@ -47,7 +47,8 @@ import {Router} from '@angular/router';
   styles: []
 })
 export class ChairmanDashboardComponent implements OnInit {
-  department: Department;
+  // @ts-ignore
+  department: Department = {name: ''};
   exams: Exam[] = [];
   loading = 0;
 
