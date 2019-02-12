@@ -21,7 +21,8 @@ import {MatSnackBar} from '@angular/material';
                 [disabled]="loading > 0">APPLY NOW
         </button>
         <a mat-button *ngIf="examForm.status > 5" [href]="'/api/exam-forms/'+examForm.id+'/admit/'">
-          <mat-icon>cloud_download</mat-icon> Download Admit Card</a>
+          <mat-icon>cloud_download</mat-icon>
+          Download Admit Card</a>
         <mat-error *ngIf="examForm.status == 0 && expired(e.ldo_form_fill_up)">Application Deadline Expired</mat-error>
         <mat-error *ngIf="examForm.status == 5 && expired(e.ldo_payment)">Payment Deadline Expired</mat-error>
       </mat-toolbar>
@@ -72,8 +73,8 @@ export class StudentDashboardComponent implements OnInit {
     'Not applied yet.',
     'Pending for attendance entry.',
     'Pending for chairman approval.',
-    'Pending for provost approval.',
     'Pending at accounts office.',
+    'Pending for provost approval.',
     'Pending for payment.',
     'Payment confirmed.',
     'Application rejected.'
@@ -116,12 +117,12 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   calculateFees(exam) {
-    let fees = 0.0;
+    let fees = exam.mark_sheet_fees;
     for (const c of this.courses) {
       fees += c.credits * exam.fees_per_credit;
     }
 
-    if (this.examForm.attendance < 70 && this.examForm.attendance >= 60) {
+    if (this.examForm.attendance < exam.allowed_attendance && this.examForm.attendance >= exam.fined_attendance) {
       fees += exam.attendance_fine;
     }
     return fees;
@@ -138,7 +139,6 @@ export class StudentDashboardComponent implements OnInit {
       this.ss.getInfo(this.student.semester).subscribe(d => {
         this.loading--;
         this.courses = d.courses;
-        this.ss.getInfo(this.student.semester);
       }, error => {
         this.sb.open('Error loading semester info.', 'OK', {duration: 4000});
         this.loading--;
@@ -163,6 +163,6 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   expired(date) {
-    return (new Date(date)) < (new Date());
+    return date != null && (new Date(date)) < (new Date());
   }
 }

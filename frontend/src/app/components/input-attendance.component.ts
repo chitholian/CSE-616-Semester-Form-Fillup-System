@@ -9,10 +9,16 @@ import {AuthService} from '../services/auth.service';
 @Component({
   selector: 'app-input-attendance',
   template: `
-    <div class="panel" *ngIf="exam != null">
+    <div class="panel of-hidden" *ngIf="exam != null">
       <mat-toolbar>{{exam.title}}</mat-toolbar>
       <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
-      <table mat-table [dataSource]="forms" class="panel-content">
+      <table mat-table [dataSource]="forms" class="panel-content of-hidden">
+        <ng-container matColumnDef="pic">
+          <mat-header-cell *matHeaderCellDef>Avatar</mat-header-cell>
+          <mat-cell *matCellDef="let s">
+            <img alt="{{s.student}}" src="{{s.std_avatar}}"/>
+          </mat-cell>
+        </ng-container>
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
           <mat-cell *matCellDef="let s">{{s.student}}</mat-cell>
@@ -44,7 +50,11 @@ import {AuthService} from '../services/auth.service';
       </div>
     </div>
   `,
-  styles: [`mat-progress-bar{width: 100%;position: fixed;top: 64px;}`]
+  styles: [`mat-progress-bar {
+    width: 100%;
+    position: fixed;
+    top: 64px;
+  }`]
 })
 export class InputAttendanceComponent implements OnInit {
 
@@ -52,7 +62,7 @@ export class InputAttendanceComponent implements OnInit {
   exam: Exam;
   forms: ExamForm[];
 
-  displayedColumns = ['id', 'name', 'session', 'attendance'];
+  displayedColumns = ['pic', 'id', 'name', 'session', 'attendance'];
 
   constructor(private router: Router, private as: AuthService, private sb: MatSnackBar, private ds: DepartmentService, private es: ExamService, private route: ActivatedRoute) {
   }
@@ -69,20 +79,21 @@ export class InputAttendanceComponent implements OnInit {
     for (const f of this.forms) {
       console.log(f.attendance);
       if (f.attendance === -1) {
-        this.sb.open('There are unchecked fields (i.e. negative values). Please make them zero at least.', 'OK', { duration: 4000 });
+        this.sb.open('There are unchecked fields (i.e. negative values). Please make them zero at least.', 'OK', {duration: 4000});
         this.loading--;
         return;
       }
     }
     if (confirm('Are you sure to submit all the entries ? You cannot undo this.')) {
       // Send the entire array of forms to the server.
-      this.es.inputAttendances(this.forms).subscribe(res => {
+      this.es.inputAttendances(this.exam.id, this.forms).subscribe(res => {
         this.as.examChanged.next(true);
         this.loading--;
+        this.sb.open('Submission Successful.', 'OK', {duration: 4000});
         this.router.navigate(['/dept-office']);
       }, error1 => {
         this.loading--;
-        this.sb.open('Error processing request.', 'OK', { duration: 4000 });
+        this.sb.open('Error processing request.', 'OK', {duration: 4000});
       });
     } else {
       this.loading--;
@@ -107,7 +118,7 @@ export class InputAttendanceComponent implements OnInit {
       }
       this.loading--;
     }, err => {
-      this.sb.open('Error loading exam info or not found.', 'OK', { duration: 4000 });
+      this.sb.open('Error loading exam info or not found.', 'OK', {duration: 4000});
       this.loading--;
     });
   }
@@ -117,7 +128,7 @@ export class InputAttendanceComponent implements OnInit {
       this.forms = res;
       this.loading--;
     }, error1 => {
-      this.sb.open('Error loading forms.', 'OK', { duration: 4000 });
+      this.sb.open('Error loading forms.', 'OK', {duration: 4000});
       this.loading--;
     });
   }

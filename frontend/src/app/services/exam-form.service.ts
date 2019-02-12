@@ -12,4 +12,8 @@ export class ExamFormService {
   patch(form) {
     return this.auth.patch('/api/exam-forms/' + form.id + '/', form);
   }
+
+  approveForms(examId, formList) {
+    return this.auth.patch('/api/approve-forms/', {exam: examId, forms: formList});
+  }
 }

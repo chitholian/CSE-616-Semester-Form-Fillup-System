@@ -28,10 +28,12 @@ import {DatePipe} from '@angular/common';
 import {InputAttendanceComponent} from './components/input-attendance.component';
 import {ConfirmPaymentComponent} from './components/confirm-payment.component';
 import {ExamFormDetailsComponent} from './components/exam-form-details.component';
-import { StudentListComponent } from './components/student-list.component';
-import { HomePageComponent } from './components/home-page.component';
-import { UserDashBoardComponent } from './components/user-dash-board.component';
-import {MatProgressSpinnerModule} from '@angular/material';
+import {StudentListComponent} from './components/student-list.component';
+import {HomePageComponent} from './components/home-page.component';
+import {UserDashBoardComponent} from './components/user-dash-board.component';
+import {ApproveFormsComponent} from './components/approve-forms.component';
+import {HallService} from './services/hall.service';
+import { ImposeFeesComponent } from './components/impose-fees.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import {MatProgressSpinnerModule} from '@angular/material';
     ConfirmPaymentComponent,
     StudentListComponent,
     HomePageComponent,
-    UserDashBoardComponent
+    UserDashBoardComponent,
+    ApproveFormsComponent,
+    ImposeFeesComponent,
   ],
   imports: [
     CustomModule,
@@ -62,7 +66,7 @@ import {MatProgressSpinnerModule} from '@angular/material';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [DatePipe, AuthService, DepartmentService, SemesterService, AdminService, StudentService, ExamService, ExamFormService],
+  providers: [DatePipe, AuthService, DepartmentService, SemesterService, AdminService, StudentService, ExamService, ExamFormService, HallService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

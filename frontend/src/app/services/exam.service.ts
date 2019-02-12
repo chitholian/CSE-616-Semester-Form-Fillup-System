@@ -32,8 +32,8 @@ export class ExamService {
     return this.auth.get<ExamForm[]>('/api/exams/' + examId + '/forms/');
   }
 
-  inputAttendances(forms) {
-    return this.auth.patch('/api/input-attendances/', forms);
+  inputAttendances(examId, formList) {
+    return this.auth.patch('/api/input-attendances/', {exam_id: examId, forms: formList});
   }
 
   deleteExam(examId) {
@@ -42,5 +42,9 @@ export class ExamService {
 
   finishExam(examId) {
     return this.auth.patch('/api/exams/' + examId + '/', {id: examId, active: false});
+  }
+
+  imposeFees(examId, fees) {
+    return this.auth.patch('/api/exams/' + examId + '/', fees);
   }
 }

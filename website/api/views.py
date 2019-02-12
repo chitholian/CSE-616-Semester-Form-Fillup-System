@@ -1,5 +1,3 @@
-import json
-
 from django.http import HttpResponse
 from django.template.loader import get_template
 from rest_framework import viewsets, permissions, status, generics
@@ -23,6 +21,14 @@ class AdminUserViewSet(viewsets.ModelViewSet):
             elif admin.type == "chairman":
                 return Response(DepartmentSerializer(Department.objects.filter(chairman=admin), many=True).data)
             raise AssertionError("User type mismatched")
+        except AssertionError:
+            return Response([], status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=permissions.SAFE_METHODS, detail=True)
+    def halls(self, request, pk=None):
+        admin = self.get_object()
+        try:
+            return Response(HallSerializer(Hall.objects.filter(provost=admin), many=True).data)
         except AssertionError:
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
@@ -117,7 +123,8 @@ class ExamFormViewSet(viewsets.ModelViewSet):
     def admit(self, request, pk=None):
         form = self.get_object()
         if form.status < 6:
-            return HttpResponse('Payment must be completed to download admit card.', status=status.HTTP_402_PAYMENT_REQUIRED)
+            return HttpResponse('Payment must be completed to download admit card.',
+                                status=status.HTTP_402_PAYMENT_REQUIRED)
         exam = Exam.objects.filter(examform=form).first()
         student = Student.objects.filter(examform=form).first()
         semester = Semester.objects.filter(student=student)
@@ -140,11 +147,22 @@ class InputAttendanceView(generics.UpdateAPIView):
     serializer_class = ExamFormForOfficeSerializer
 
     def partial_update(self, request, *args, **kwargs):
-        exam_id = request.data[0]['exam']
-        for data in request.data:
+        exam_id = request.data.get('exam_id')
+        forms = request.data.get('forms')
+        for data in forms:
             form = ExamForm.objects.get(id=data['id'])
-            form.status = 5
+            form.status = 4
             form.attendance = data['attendance']
             form.save()
-        Exam.objects.update(id=exam_id, status=5)
+        Exam.objects.filter(id=exam_id).update(status=3)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class ApproveFormsView(generics.UpdateAPIView):
+    def partial_update(self, request, *args, **kwargs):
+        exam_id = request.data.get('exam')
+        forms = request.data.get('forms')
+        for data in forms:
+            ExamForm.objects.filter(id=data['id']).update(status=5)
+        Exam.objects.filter(id=exam_id).update(status=5)
         return Response(status=status.HTTP_202_ACCEPTED)

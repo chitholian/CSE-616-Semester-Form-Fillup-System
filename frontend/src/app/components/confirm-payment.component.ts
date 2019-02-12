@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
-import {Exam, ExamForm} from '../custom/interfaces';
+import {Course, Exam, ExamForm} from '../custom/interfaces';
 import {ExamService} from '../services/exam.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExamFormService} from '../services/exam-form.service';
 import {AuthService} from '../services/auth.service';
+import {SemesterService} from '../services/semester.service';
 
 @Component({
   selector: 'app-confirm-payment',
@@ -13,6 +14,12 @@ import {AuthService} from '../services/auth.service';
       <mat-toolbar>{{exam.title}}<span class="spacer"></span>Payable until: {{exam.ldo_payment | date :'MMMM dd, yyyy'}} </mat-toolbar>
       <mat-progress-bar mode="indeterminate" *ngIf="loading>0"></mat-progress-bar>
       <table mat-table [dataSource]="forms" class="panel-content">
+        <ng-container matColumnDef="pic">
+          <mat-header-cell *matHeaderCellDef>Avatar</mat-header-cell>
+          <mat-cell *matCellDef="let s">
+            <img alt="{{s.student}}" src="{{s.std_avatar}}" />
+          </mat-cell>
+        </ng-container>
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
           <mat-cell *matCellDef="let s">{{s.student}}</mat-cell>
@@ -24,6 +31,10 @@ import {AuthService} from '../services/auth.service';
         <ng-container matColumnDef="session">
           <mat-header-cell *matHeaderCellDef>Session</mat-header-cell>
           <mat-cell *matCellDef="let s">{{s.std_session}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="fees">
+          <mat-header-cell *matHeaderCellDef>Total Fees (BDT)</mat-header-cell>
+          <mat-cell *matCellDef="let s">{{calculateFees(s)}}.00 TK</mat-cell>
         </ng-container>
         <ng-container matColumnDef="status">
           <mat-header-cell *matHeaderCellDef>Paid</mat-header-cell>
@@ -42,21 +53,26 @@ import {AuthService} from '../services/auth.service';
       </table>
     </div>
   `,
-  styles: [`mat-progress-bar{width: 100%;position: fixed;top: 64px;}`]
+  styles: [`mat-progress-bar {
+    width: 100%;
+    position: fixed;
+    top: 64px;
+  }`]
 })
 export class ConfirmPaymentComponent implements OnInit {
 
-  constructor(private auth: AuthService, private router: Router, private sb: MatSnackBar, private efs: ExamFormService, private es: ExamService, private route: ActivatedRoute) {
+  constructor(private ss: SemesterService, private auth: AuthService, private router: Router, private sb: MatSnackBar, private efs: ExamFormService, private es: ExamService, private route: ActivatedRoute) {
   }
 
+  courses: Course[] = [];
   loading = 0;
   exam: Exam;
   forms: ExamForm[];
 
-  displayedColumns = ['id', 'name', 'session', 'status'];
+  displayedColumns = ['pic', 'id', 'name', 'session', 'fees', 'status'];
 
   expired(exam) {
-    return (new Date(exam.ldo_payment)) < (new Date());
+    return exam.ldo_payment != null && (new Date(exam.ldo_payment)) < (new Date());
   }
 
   ngOnInit() {
@@ -70,6 +86,7 @@ export class ConfirmPaymentComponent implements OnInit {
     this.loading++;
     this.es.getInfo(examId).subscribe(res => {
       this.exam = res;
+      this.loadCourses();
       if (res.status !== 5 || this.expired(res)) {
         this.loading--;
         this.router.navigate(['/bank']);
@@ -106,6 +123,29 @@ export class ConfirmPaymentComponent implements OnInit {
     }, error1 => {
       this.sb.open('Error processing request.', 'OK', {duration: 4000});
       this.loading--;
+    });
+  }
+
+  calculateFees(form) {
+    let fees = this.exam.mark_sheet_fees;
+    for (const c of this.courses) {
+      fees += c.credits * this.exam.fees_per_credit;
+    }
+
+    if (form.attendance < this.exam.allowed_attendance && form.attendance >= this.exam.fined_attendance) {
+      fees += this.exam.attendance_fine;
+    }
+    return fees;
+  }
+
+  loadCourses() {
+    this.loading++;
+    this.ss.getInfo(this.exam.id).subscribe(data => {
+      this.loading--;
+      this.courses = data.courses;
+    }, error1 => {
+      this.loading--;
+      this.sb.open('Error loading course list, cannot calculate fees.', 'OK', {duration: 4000});
     });
   }
 }

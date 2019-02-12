@@ -20,6 +20,8 @@ import {ExamFormDetailsComponent} from './components/exam-form-details.component
 import {StudentListComponent} from './components/student-list.component';
 import {HomePageComponent} from './components/home-page.component';
 import {UserDashBoardComponent} from './components/user-dash-board.component';
+import {ImposeFeesComponent} from './components/impose-fees.component';
+import {ApproveFormsComponent} from './components/approve-forms.component';
 
 const routes: Routes = [
   {
@@ -52,8 +54,18 @@ const routes: Routes = [
       {path: 'exams/:id', component: ConfirmPaymentComponent},
     ]
   },
-  {path: 'accounts', component: AccountsComponent, canActivate: [AdminUserGuard]},
-  {path: 'hall-provost', component: ProvostComponent, canActivate: [AdminUserGuard]},
+  {
+    path: 'accounts', component: AccountsComponent, canActivate: [AdminUserGuard], children: [
+      {path: '', component: UserDashBoardComponent},
+      {path: 'exams/:id', component: ImposeFeesComponent},
+    ]
+  },
+  {
+    path: 'hall-provost', component: ProvostComponent, canActivate: [AdminUserGuard], children: [
+      {path: '', component: UserDashBoardComponent},
+      {path: 'exams/:id', component: ApproveFormsComponent},
+    ]
+  },
 
   {path: '**', component: NotFoundComponent},
 ];

@@ -57,6 +57,7 @@ export interface Exam {
   semester: number;
   active: boolean;
   fees_per_credit: number;
+  mark_sheet_fees: number;
   allowed_attendance: number;
   fined_attendance: number;
   attendance_fine: number;
@@ -75,6 +76,8 @@ export interface ExamForm {
   attendance: number;
   std_name: string;
   std_session: string;
+  std_avatar: string;
+  std_gender: string;
 }
 
 export interface Course {

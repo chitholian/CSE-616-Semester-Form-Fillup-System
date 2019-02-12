@@ -26,8 +26,8 @@ RELIGIONS = (
 EXAM_STATES = (
     (1, 'Pending for attendance entry'),
     (2, 'Pending for chairman approval'),
-    (3, 'Pending for provost approval'),
-    (4, 'Pending for fees imposure'),
+    (3, 'Pending for fees imposure'),
+    (4, 'Pending for provost approval'),
     (5, 'Pending for payment'),
     (6, 'Payment completed'),
 )
@@ -117,6 +117,7 @@ class Exam(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
     fees_per_credit = models.PositiveIntegerField(default=50)
+    mark_sheet_fees = models.PositiveIntegerField(default=180)
     allowed_attendance = models.PositiveIntegerField(default=70)
     fined_attendance = models.PositiveIntegerField(default=60)
     attendance_fine = models.PositiveIntegerField(default=600)

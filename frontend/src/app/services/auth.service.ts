@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AdminUser, Student} from '../custom/interfaces';
+import {AdminUser, Hall, Student} from '../custom/interfaces';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 
@@ -10,12 +10,14 @@ export class AuthService {
   examChanged = new Subject();
 
   user: AdminUser;
+  hall: Hall;
 
   student: Student;
 
   constructor(private http: HttpClient) {
     this.user = JSON.parse(sessionStorage.getItem('user'));
     this.student = JSON.parse(sessionStorage.getItem('student'));
+    this.hall = JSON.parse(sessionStorage.getItem('hall'));
   }
 
   get<T>(url): Observable<T> {

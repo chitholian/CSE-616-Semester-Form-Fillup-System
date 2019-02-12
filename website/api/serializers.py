@@ -59,12 +59,20 @@ class ExamFormSerializer(serializers.ModelSerializer):
 class ExamFormForOfficeSerializer(serializers.ModelSerializer):
     std_name = serializers.SerializerMethodField('student_name')
     std_session = serializers.SerializerMethodField('student_session')
+    std_avatar = serializers.SerializerMethodField('student_avatar')
+    std_gender = serializers.SerializerMethodField('student_gender')
 
     def student_name(self, obj):
         return obj.student.name
 
     def student_session(self, obj):
         return obj.student.session
+
+    def student_avatar(self, obj):
+        return obj.student.avatar.url
+
+    def student_gender(self, obj):
+        return obj.student.gender
 
     class Meta:
         model = ExamForm

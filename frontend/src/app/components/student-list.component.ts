@@ -8,6 +8,12 @@ import {MatSnackBar} from '@angular/material';
   selector: 'app-student-list',
   template: `
     <table mat-table [dataSource]="students" class="panel-content">
+      <ng-container matColumnDef="pic">
+        <mat-header-cell *matHeaderCellDef>Avatar</mat-header-cell>
+        <mat-cell *matCellDef="let s">
+          <img alt="{{s.student}}" src="{{s.avatar}}" />
+        </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="id">
         <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
         <mat-cell *matCellDef="let s">{{s.id}}</mat-cell>
@@ -44,7 +50,7 @@ export class StudentListComponent implements OnInit {
   loading = 0;
   students: Student[] = [];
 
-  displayedColumns = ['id', 'name', 'gender', 'phone', 'email', 'address'];
+  displayedColumns = ['pic', 'id', 'name', 'gender', 'phone', 'email', 'address'];
 
   constructor(private sb: MatSnackBar, private ds: DepartmentService, private route: ActivatedRoute) {
   }

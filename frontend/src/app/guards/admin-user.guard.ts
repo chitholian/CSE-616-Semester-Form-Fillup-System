@@ -48,6 +48,13 @@ export class AdminUserGuard implements CanActivate, CanActivateChild, CanLoad {
       this.router.navigate(['/login/admin']);
       return false;
     }
+    if (state.url.startsWith('/hall-provost')) {
+      if (this.auth.user && this.auth.user.type === 'provost') {
+        return true;
+      }
+      this.router.navigate(['/login/admin']);
+      return false;
+    }
     return false;
   }
 
