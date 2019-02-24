@@ -5,7 +5,7 @@ from api import views
 from .routers import router
 
 urlpatterns = [
-    path('approve-forms/', views.InputAttendanceView.as_view()),
+    path('approve-forms/', views.ApproveFormsView.as_view()),
     path('input-attendances/', views.InputAttendanceView.as_view()),
     path('auth/obtain-jwt-token/', obtain_jwt_token),
     path('auth/refresh-jwt-token/', refresh_jwt_token),

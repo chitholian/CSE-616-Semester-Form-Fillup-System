@@ -4,6 +4,7 @@ import {Exam} from '../custom/interfaces';
 import {ExamService} from '../services/exam.service';
 import {MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DatePipe} from '@angular/common';
 import {AuthService} from '../services/auth.service';
 
 @Component({
@@ -27,6 +28,14 @@ import {AuthService} from '../services/auth.service';
                  placeholder="Low Attendance Fees (BDT)">
           <mat-error *ngIf="attendance_fine.invalid">Enter a valid amount.</mat-error>
         </mat-form-field>
+        <mat-form-field>
+          <input matInput required [formControl]="ldo_payment" placeholder="Payable Until"
+                 [matDatepicker]="picker"
+                 name="ldo_payment">
+          <mat-datepicker-toggle #toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="ldo_payment.invalid">A valid date is required</mat-error>
+        </mat-form-field>
         <button [disabled]="loading > 0 || form.invalid" class="float-right" mat-raised-button color="primary" type="submit">SUBMIT</button>
       </div>
     </form>
@@ -40,6 +49,10 @@ export class ImposeFeesComponent implements OnInit {
   // @ts-ignore
   exam: Exam = {title: ''};
 
+  get ldo_payment() {
+    return this.form.get('ldo_payment');
+  }
+
   get fees_per_credit() {
     return this.form.get('fees_per_credit');
   }
@@ -52,11 +65,13 @@ export class ImposeFeesComponent implements OnInit {
     return this.form.get('attendance_fine');
   }
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private es: ExamService, private sb: MatSnackBar, private router: Router, private auth: AuthService) {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private dp: DatePipe, private es: ExamService, private sb: MatSnackBar, private router: Router, private auth: AuthService) {
     this.form = fb.group({
       fees_per_credit: fb.control(50, [Validators.required, Validators.min(0)]),
       mark_sheet_fees: fb.control(180, [Validators.required, Validators.min(0)]),
       attendance_fine: fb.control(600, [Validators.required, Validators.min(0)]),
+      ldo_payment: fb.control('', Validators.required),
+
     });
   }
 
@@ -69,6 +84,7 @@ export class ImposeFeesComponent implements OnInit {
   submit() {
     this.loading++;
     const data = this.form.value;
+    data.ldo_payment = this.dp.transform(data.ldo_payment, 'yyyy-MM-dd');
     data.status = 4;
     this.es.imposeFees(this.exam.id, data).subscribe(res => {
       this.sb.open('Fees imposure successful.', 'OK', {duration: 4000});
