@@ -1,10 +1,13 @@
 
+# IMPORTANT
+Before reading this file please setup the Web App following the README.md file.
+
 
 ## To do initial data entry
 
 - Login to [Django admin](http://127.0.0.1:8000/admin/) as a superuser (you created it by running `python manage.py createsuperuser` (see README.md).
 
-Follow the following sequence to avoid inconsistency.
+### Follow the following sequence to avoid inconsistency.
 
 - Add some Admin Users (i.e. dept. chairman, office, provost etc.)
 - Add some Courses.
